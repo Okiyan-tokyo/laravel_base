@@ -19,7 +19,7 @@
     </form>
     </li>   
     @empty
-        {{ないよ！}}
+        {{ないよa！}}
     @endforelse
     </ul>
 
