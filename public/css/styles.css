@@ -1,0 +1,105 @@
+body{
+  background-color: aqua;
+}
+
+h1,h2,.bodyclass{
+  text-align: center;
+}
+
+.createpoint>p,.backclass{
+  text-align: right;
+}
+
+
+ul,.createpoint,h2,.bodyclass,.backclass{
+  width:50%;
+  min-width: 300px;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+  border-top: black solid 3px;
+  padding-top: 10px;
+  margin-top: 10px;
+  list-style-type: disc;
+  list-style-position: inside;
+  padding-left: 0px;
+}
+
+
+li{
+  display:flex;
+}
+
+
+li>a{
+  margin-right: auto;
+}
+
+li>form{
+  margin-left: auto;
+}
+
+li>form>button{
+  border:none;
+  background-color: transparent;
+  text-decoration: underline;
+  color:rgb(0,120,220);
+  font-weight: bold;
+  cursor: pointer;
+}
+
+
+
+.createform{
+  border-top: black solid 3px;
+  width:60%;
+  min-width: 300px;
+  max-width: 700px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 10px;
+  padding-top: 10px;
+  font-size: 1.1em;
+}
+
+.c1,.c2{
+  margin-top: 10px;
+}
+
+
+.c1>input,.c2>textarea{
+  width:100%;
+}
+
+textarea{
+  height:350px;
+}
+
+.btndiv{
+  text-align: center;
+}
+
+.btndiv>button{
+  font-size:1.1em;
+}
+
+.commentpoint{
+  border-top: black dashed 2px;
+  margin-top:30px;
+  width:50%;
+  max-width: 500px;
+  min-width: 300px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.commentsli{
+  display:flex;
+}
+
+.cdspan{
+  margin-left:auto;
+  text-decoration: underline;
+  color:blue;
+  cursor: pointer;
+}
