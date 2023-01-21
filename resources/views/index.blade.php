@@ -1,7 +1,7 @@
 <x-layout>
 <x-slot name="title">MyBBS</x-slot>
 
-<h1>ここでおきやんが編集する！</h1>
+<h1>ここでおきやんが編集する!！</h1>
 
 <div class="createpoint">
     <p><a href="{{route("createroute")}}">create</a></p>
