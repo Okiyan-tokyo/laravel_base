@@ -1,0 +1,34 @@
+<?php
+
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\JteamController;
+use App\Http\Controllers\Nowlists22Controller;
+
+
+/*
+|--------------------------------------------------------------------------
+| Web Routes
+|--------------------------------------------------------------------------
+|
+| Here is where you can register web routes for your application. These
+| routes are loaded by the RouteServiceProvider within a group which
+| contains the "web" middleware group. Now create something great!
+|
+*/
+
+// スタート画面
+Route::get('/',[JteamController::class,"index"])->name("indexroute");
+
+// チームを選んでゲーム開始
+Route::post('/select.team',[JteamController::class,"select_team"])->name("selectteamroute");
+
+
+// 選手をSQL登録
+Route::get('/teamgo',function(){
+    return view("now_team/list_to_sql");
+}
+);
+
+// チーム名をSQL登録
+Route::get('/nowteam/teamname/team_to_sql',[Nowlists22Controller::class,"teamname_to_sql"]
+);
