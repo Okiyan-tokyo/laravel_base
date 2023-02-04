@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use App\Enums\PublishStateType;
 
 return new class extends Migration
 {
@@ -18,8 +19,9 @@ return new class extends Migration
             $table->timestamps();
             $table->string("eng_name");
             $table->string("jpn_name");
-            $table->enum("cate", PublishStateType::getcateteam())
-            ->default("nocate");
+            // $table->enum("cate",PublishStateType::getCateteam())
+            // ->default(PublishStateType::error);
+            $table->string("cate");
             $table->integer("red");
             $table->integer("blue");
             $table->integer("green");

@@ -20,12 +20,10 @@ id="its_game">
   @csrf
   
   <div class="user_answer_set">
-    @if($formroute!=="withnumroute")
     <div class="inputsets">
     <input type="text" name="user_answer" id="user_answer">
-    <button id="totalbtn">決定！</button>
+    <button>決定！</button>
     </div>
-    @endif
     <div class="correct_answers">
       <p class="correct_count"><span class="countspan1">0</span>人正解</p>
       <p class="rest_count">(あと<span class="countspan2">{{
@@ -49,34 +47,15 @@ id="its_game">
 <table class="answertable">
 <thead>
 <tr class="answertr">
-  <th class="answerth"
-    @if($formroute==="withnumroute")
-    style="width:30%;"
-    @endif
-    >背番号</th>
-    <th class="answerth"
-    @if($formroute==="withnumroute")
-    style="width:70%;"
-    @endif
-  >名前</th>
+  <th class="answerth">背番号</th>
+    <th class="answerth">名前</th>
 </tr>
 </thead>
 <tbody>
   @forelse ($lists as $list)
   <tr class="answertr">
-  <td class="answertd"
-  @if($formroute==="withnumroute")
-  style="width:30%;"
-  @endif
-  >{{$list->num}}</td>
-  @if($formroute==="withnumroute")
-  <td class="tdquestion" style="width:70%;" data-open="close" data-num="{{$list->num}}" data-name="{{$list->full}}">
-    <input type="text" name="player">
-    <button class="numsetbtn">決定！</button>
-  </td>
-  @else
-  <td class="tdquestion" data-open="close" data-num="{{$list->num}}" data-name="{{$list->full}}">？？？</td>  
-  @endif
+  <td class="answertd">{{$list->num}}</td>
+  <td class="tdquestion"  data-open="close" data-num="{{$list->num}}" data-name="{{$list->full}}">？？？</td>
   </tr>
   @empty
   {{"エラーです"}}
@@ -97,13 +76,9 @@ id="its_game">
 <script>
   $(()=>{
 
-    if($("#totalbtn").length){
-      $("#totalbtn").on("click",submit_answer1)
-    }else if($('.numsetbtn').length){
-      $(".numsetbtn").on("click",submit_answer2)
-    }
 
-    function submit_answer1(e){
+
+    $("button").on("click",function(e){
       e.preventDefault();
       fetch(
           $("form").data("url"),
@@ -113,21 +88,21 @@ id="its_game">
               'X-CSRF-TOKEN': '{{ csrf_token() }}' 
             },
             body:new URLSearchParams({
-                answer:$("#user_answer").val(),
-                team:$("form").data("team"),
+              answer:$("#user_answer").val(),
+              team:$("form").data("team"),
             })
           }    
-      )    
-      .then((response)=>{
+      ).then((response)=>{
         return response.json();
       }).then((json)=>{
         json=JSON.parse(json);
     
         if(json.isok==="ok"){
           // 正解の場合
+
           // 処理する要素の番号を格納
           let elemsets=[];
-
+    
           // 正解した問題の背番号の取得
            json.numset.forEach(json_num => {
               // 不正解ならnumsetは空
@@ -143,47 +118,10 @@ id="its_game">
             })
           });
           
-          if(elemsets.length>0){
-            right_display(elemsets);
-          }else{
-            // 既に回答済みの時の処理
-            exist_display();    
-            // 間違いの時の処理
-          }
-        }else{
-          wrong_display();
-        }
-    })
-  }
-
-  function submit_answer2(e){
-      e.preventDefault();
-      fetch(
-          $("form").data("url"),
-          {
-            method:"post",
-            headers: {
-              'X-CSRF-TOKEN': '{{ csrf_token() }}' 
-            },
-            body:new URLSearchParams({
-                answer:$("#user_answer").val(),
-                team:$("form").data("team"),
-            })
-          }    
-      )    
-      .then((response)=>{
-        return response.json();
-      }).then((json)=>{
-        json=JSON.parse(json);
-      }
-    }
-  
-  
-      // 正解
-      function right_display(elemsets){
           // 正解の背番号の名前を開ける
           // それ以外の欄を消す
           // 正解の数を１つ増やす
+          if(elemsets.length>0){
             $(".tdquestion").each(function(i,elem){
               if(!elemsets.includes(i)){
                 $(elem).closest('tr').css("visibility","collapse");
@@ -199,60 +137,48 @@ id="its_game">
           $("#whenright").removeClass("whenrightbase");
           $("#whenright").addClass("whenright");
           $(".not_fixed").css("transform","translateY(225px)");
-          $("input").val("").focus();
-          $("button").css({pointerEvents:"none",opacity:0.3});
+
           setTimeout(function(){
             $(".tdquestion").each(function(i,elem){
               $(elem).closest('tr').css("visibility","visible");
             })
             $("#whenright").removeClass("whenright");
             $("#whenright").addClass("whenrightbase");
-            $("button").css({pointerEvents:"auto",opacity:1});
             $(".not_fixed").css("transform","translateY(175px)");
           },3000)
   
           // 全問正解していたら、お祝いの表示
           if(Number($(".countspan2").text())===0){
-            $(".congratulation").addClass("congraadd");
-            $(".congratulation").css("display","block");
+          $(".congratulation").addClass("congraadd");
+          $(".congratulation").css("display","block");
            }
-    }
 
-    // 既に存在
-    function exist_display(){
-           $("#existname").removeClass("existbase")
+          }else{
+            // 既に回答済みの時の処理
+            $("#existname").removeClass("existbase")
                            .addClass("whenexist");
             $(".not_fixed").css("transform","translateY(225px)");
-            $("input").val("").focus();
-            $("button").css({pointerEvents:"none",opacity:0.3});
             setTimeout(function(){
               $("#existname").removeClass("whenexist")
                              .addClass("existbase");
               $(".not_fixed").css("transform","translateY(175px)");
-              $("button").css({pointerEvents:"auto",opacity:1});
-            },2000);
-    }
+            },2000)
+          }
 
-    // 間違い
-    function wrong_display(){
+      // 間違いの時の処理
+        }else{
           $("#whenwrong").removeClass("whenwrongbase")
                          .addClass("whenwrong");
           $(".not_fixed").css("transform","translateY(225px)");
-          $("input").val("").focus();
-          $("button").css({pointerEvents:"none",opacity:0.3});
           setTimeout(function(){
             $("#whenwrong").removeClass("whenwrong")
-            .addClass("whenwrongbase");
+                           .addClass("whenwrongbase");
             $(".not_fixed").css("transform","translateY(175px)");
-            $("button").css({pointerEvents:"auto",opacity:1});
-          },2000);
-    }
-
-
-
-// jqueryマークの終点
-})
-
+          },2000)
+        }
+    })
+   })
+  })
   </script>
 
 
