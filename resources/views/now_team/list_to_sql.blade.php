@@ -1,8 +1,8 @@
 <?php
-use App\Models\Nowlists22;
+use App\Models\Nowlists23;
 
 // まずは全件削除
-Nowlists22::truncate();
+Nowlists23::truncate();
 
 // txtのファイルの取得
 
@@ -10,7 +10,8 @@ Nowlists22::truncate();
 // $txtfiles=glob(__DIR__."/*.txt");
 
 // laravelならこれ
-$txtfiles=glob(resource_path()."/views/now_team/*.txt");
+$txtfiles=glob(resource_path()."/views/now_team/team_name/*.txt");
+
 
 // 正規表現
 
@@ -23,8 +24,8 @@ $teamnamelists=[];
 // txtファイルを開いて１行ずつ取り出す
 foreach($txtfiles as $txt){
   $lists=file($txt);
-  $slashpoint=mb_strpos($txt,"now_team/");
-  $teamandtxt=mb_substr($txt,$slashpoint+9);
+  $slashpoint=mb_strpos($txt,"team_name");
+  $teamandtxt=mb_substr($txt,$slashpoint+10);
   $team=mb_substr($teamandtxt,0,mb_strlen($teamandtxt)-4);
 
   $teamnamelists[$team]=[];
@@ -61,11 +62,14 @@ foreach($txtfiles as $txt){
       }
 
 
-      $post=new Nowlists22;
+      $post=new Nowlists23;
       $post->team=$team;
       $post->num=$numbase[0][0];
       $post->full=$fullname;
       $post->part=implode(",",$partname);
+      $post->right_full=0;
+      $post->right_part=0;
+      $post->right_withnum=0;
       $post->save();
 
     }

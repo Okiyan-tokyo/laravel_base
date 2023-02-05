@@ -12,4 +12,4 @@ class Teamname extends Model
         "eng_name","jpn_name","cate","red","blue","green"
     ];
 }
-// /Users/okiyan/Desktop/answer_player/database/migrations/2023_01_22_124109_create_nowlists22s_table.php
+// /Users/okiyan/Desktop/answer_player/database/migrations/2023_01_22_124109_create_nowlists23s_table.php

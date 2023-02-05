@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Nowlists22;
-use Nowlists22Controller;
+use App\Models\Nowlists23;
+use Nowlists23Controller;
 use App\Models\Teamname;
 use App\Enums\PublishStateType;
 
@@ -16,7 +16,6 @@ class JteamController extends Controller
 
 
     public function index(){
-        // $lists=Nowlists22::groupBy("team")->get("team"); 
         $J1lists=Teamname::orderBy("id")->select("eng_name", "jpn_name", "cate")->where("cate","=","J1")->get(); 
         $J2lists=Teamname::orderBy("id")->select("eng_name", "jpn_name", "cate")->where("cate","=","J2")->get(); 
         $J3lists=Teamname::orderBy("id")->select("eng_name", "jpn_name", "cate")->where("cate","=","J3")->get(); 
@@ -55,7 +54,7 @@ class JteamController extends Controller
         return view("game")->with(["teamsets"=>Teamname::where("eng_name","=",$team)->get(),
          "type"=>$type,
          "formroute"=>$formroute,
-         "lists"=>Nowlists22::where("team","=",$team)->get()
+         "lists"=>Nowlists23::where("team","=",$team)->get()
         ]);
     }
 
@@ -63,7 +62,7 @@ class JteamController extends Controller
         $answer=self::h(filter_input(INPUT_POST,"answer"));
         $team=self::h(filter_input(INPUT_POST,"team"));
         // 該当チームのリスト
-        $lists=Nowlists22::where("team","=",$team)->get();
+        $lists=Nowlists23::where("team","=",$team)->get();
         return [$answer,$team,$lists];
     }
     
@@ -145,14 +144,5 @@ class JteamController extends Controller
         exit;
     }
     
-    
-    public function answer_withnum(){
-        
-    }
-    
-    
-    public function answer_error(){
-
-    }
 
 }

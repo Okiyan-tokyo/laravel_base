@@ -97,8 +97,7 @@ id="its_game">
   @endif
   </tr>
   @empty
-  {{"エラーです"}}
-  <?php exit; ?>        
+  {{"登録された選手はいません"}}      
   @endforelse
 </tbody>
 

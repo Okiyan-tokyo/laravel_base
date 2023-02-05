@@ -8,5 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class Nowlists23 extends Model
 {
     use HasFactory;
-    protected $fillable=["num","team","full","part"];
+
+    protected $fillable=["num","team","full","part","right_part","right_full","right_withnum"];
+    
+
 }

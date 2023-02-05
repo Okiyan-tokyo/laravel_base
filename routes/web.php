@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\JteamController;
-use App\Http\Controllers\Nowlists22Controller;
+use App\Http\Controllers\Nowlists23Controller;
 
 
 /*
@@ -30,7 +30,7 @@ Route::get('/teamgo',function(){
 );
 
 // チーム名をSQL登録
-Route::get('/nowteam/teamname/team_to_sql',[Nowlists22Controller::class,"teamname_to_sql"]
+Route::get('/nowteam/teamname/team_to_sql',[Nowlists23Controller::class,"teamname_to_sql"]
 );
 
 

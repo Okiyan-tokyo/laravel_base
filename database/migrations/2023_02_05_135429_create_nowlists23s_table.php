@@ -20,11 +20,17 @@ return new class extends Migration
             $table->string("team");
             $table->string("full");
             $table->string("part");
+            $table->integer("right_part")
+                ->default(0);
+            $table->integer("right_full")
+                ->default(0);
+            $table->integer("right_withnum")
+                ->default(0);
         });
     }
 
     /**
-     * Reverse then migrations.
+     * Reverse the migrations.
      *
      * @return void
      */

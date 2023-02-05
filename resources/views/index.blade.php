@@ -9,6 +9,7 @@
 
 <x-slot name="title">23年Jリーグ選手名クイズ！</x-slot>
 
+<body class="topbody" style="background: url({{url("img/img3.jpg")}}); background-size:300px 300px; background-repeat:repeat;">
 <h1 class="toph1">23年Jリーグ：選手名クイズ！</h1>
 
 <h3 class="toph3">チームとタイプを選択してください！</h3>
