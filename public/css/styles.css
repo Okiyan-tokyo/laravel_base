@@ -112,13 +112,13 @@ select{
   position: fixed;
   top:0;
   z-index:50;
-  height:180px;
+  height:170px;
   width:100%;
 }
 
 .not_fixed{
   position:relative;
-  transform: translateY(180px);
+  transform: translateY(170px);
   z-index: 1;
 }
 
@@ -136,6 +136,7 @@ select{
   padding-top: 10px;
   padding-bottom: 10px;
   border-bottom:black dashed 3px;
+  margin-bottom: 10px;
 }
 
 .whenwrongbase,.whenrightbase,.existbase{
@@ -216,6 +217,12 @@ select{
   display:none;
 }
 
+.input_with_num{
+  width:50%;
+  max-width: 700px;
+  min-width: 80px;
+}
+
 .user_answer_set{
   width:80%;
   max-width: 800px;
@@ -245,15 +252,35 @@ select{
   margin-right: auto;
 }
 
+.correct_answers2{
+  height:50px;
+}
+
 .correct_count,.rest_count{
   width:100px;
   text-align: center;
   margin-top: 0;
   margin-bottom: 0;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.correct_count2{
+  font-size: 1.2em;
 }
 
 .rest_count{
   font-size:0.9em;
+}
+
+.rest_count2{
+  font-size:1.1em;
+}
+
+
+.for_bottom_space{
+  width:100%;
+  height:55px;
 }
 
 .congratulation{
@@ -301,13 +328,30 @@ select{
   padding-top:5px;
   height:30px;
   line-height:30px;
+  width:100%;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
   border-top:white dashed 3px;
+  display: flex;
+  justify-content: center;
+}
+
+.dataday{
+  width:20%;
+  min-width: 130px;
+  display: inline-block;
+  font-size: 0.9em;
+  font-weight: bold;
 }
 
 .backtopp>a{
+  margin-left: auto;
+  margin-right: auto;
+  display: inline-block;
+  text-align: center;
   color:white;
 }
-
 
 /* レスポンシブ */
 
@@ -318,7 +362,7 @@ select{
   .toph3{
     font-size:1.25em;
   }
-  input{
+  #user_answer{
     width:100px;
   }
   .inputsets>button{
@@ -326,6 +370,12 @@ select{
   }
   select,.postbutton>button{
     font-size:1em;
+  }
+  .correct_count2{
+    font-size: 1.1em;
+  }
+  .rest_count2{
+    font-size: 1em;
   }
 }
 @media screen and (max-width:450px){
@@ -345,6 +395,12 @@ select{
   }
   .teamselectdiv,.typeselectdiv{
     min-width: 250px;
+  }
+  .correct_count:not(.correct_count2){
+    margin-left: 0;
+  }
+  .rest_count:not(.rest_count2){
+    margin-left: 0;
   }
 }
 @media screen and (max-width:405px){
@@ -386,9 +442,6 @@ select{
     font-size: 1em;
     min-width: 300px;
   }
-}
-
-@media screen and (max-width:300px){
   .fixed_top,.backtopdiv{
     width:300px;
     left:0;
@@ -396,3 +449,4 @@ select{
     margin-right: 0;
   }
 }
+

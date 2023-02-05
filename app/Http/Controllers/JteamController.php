@@ -81,11 +81,21 @@ class JteamController extends Controller
         // 共通の変数の取得
         $lists=$this->answer_head();
     
-        // listsはそのチームのセット
+        // lists[2]はそのチームのセット
         foreach($lists[2] as $list){
             if($lists[0]===trim($list->full)){
                     $isok="ok";
                     $numset[]=$list->num;
+            }else{
+                // 外国人選手など、名前の間に・やスペースをつけた場合（半角全角ごっちゃには未対応）
+                $arraypart=explode(",",$list->part);
+                $pattern1=implode("・",$arraypart);
+                $pattern2=implode("　",$arraypart);
+                $pattern3=implode(" ",$arraypart);
+                if($lists[0]===$pattern1 || $lists[0]===$pattern2 || $lists[0]===$pattern3){
+                    $isok="ok";
+                    $numset[]=$list->num;
+                }
             }
         }
         // 共通の処理
@@ -104,17 +114,30 @@ class JteamController extends Controller
         // listsはそのチームのセット
         foreach($lists[2] as $list){
             $arraypart=explode(",",$list->part);
+            // 各部分を見ていく
             foreach($arraypart as $namepart){
                 if($lists[0]===$namepart){
                     $isok="ok";
                     $numset[]=$list->num;
                     goto not_require_full;
                 }
-            }
-            if($lists[0]===trim($list->full)){
-                $isok="ok";
-                $numset[]=$list->num;
-            }
+            } 
+            // フルネームと合っているかを見ていく
+                if($lists[0]===trim($list->full)){
+                    $isok="ok";
+                    $numset[]=$list->num;
+                }else{
+                // 外国人選手など、名前の間に・やスペースをつけた場合（半角全角ごっちゃには未対応）
+                        $arraypart=explode(",",$list->part);
+                        $pattern1=implode("・",$arraypart);
+                        $pattern2=implode("　",$arraypart);
+                        $pattern3=implode(" ",$arraypart);
+                        if($lists[0]===$pattern1 || $lists[0]===$pattern2 || $lists[0]===$pattern3){
+                            $isok="ok";
+                            $numset[]=$list->num;
+                        }
+                }
+
             not_require_full:
         }
         // 共通の処理
@@ -124,7 +147,7 @@ class JteamController extends Controller
     
     
     public function answer_withnum(){
-
+        
     }
     
     

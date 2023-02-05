@@ -7,9 +7,9 @@
   @endif
 
 
-<x-slot name="title">Jリーグ選手名クイズ！</x-slot>
+<x-slot name="title">23年Jリーグ選手名クイズ！</x-slot>
 
-<h1 class="toph1">Jリーグ選手名クイズ！</h1>
+<h1 class="toph1">23年Jリーグ：選手名クイズ！</h1>
 
 <h3 class="toph3">チームとタイプを選択してください！</h3>
 

@@ -13,7 +13,8 @@ id="its_game">
 
 <div class="fixed_top">
 
-<h2 class="toph2">{{$teamsets[0]->jpn_name}}：選手当てクイズ！</h2>
+
+<h2 class="toph2"> {{$teamsets[0]->jpn_name}}：選手当てクイズ！</h2>
 
 <form action="{{route($formroute)}}" method="post" class="answerform" data-url="{{route($formroute)}}" data-team="{{$teamsets[0]->eng_name}}">   
   
@@ -26,11 +27,28 @@ id="its_game">
     <button id="totalbtn">決定！</button>
     </div>
     @endif
+
+    @if($formroute!=="withnumroute")
     <div class="correct_answers">
-      <p class="correct_count"><span class="countspan1">0</span>人正解</p>
-      <p class="rest_count">(あと<span class="countspan2">{{
-        count($lists);
-        }}</span>人)</p>
+    @else
+    <div class="correct_answers correct_answers2">
+    @endif
+
+      @if($formroute!=="withnumroute")
+      <p class="correct_count">
+      @else
+      <p class="correct_count correct_count2">
+      @endif
+      <span class="countspan1">0</span>人正解</p>
+
+      @if($formroute!=="withnumroute")
+      <p class="rest_count">
+      @else
+      <p class="rest_count rest_count2">
+      @endif
+      (あと<span class="countspan2">{{count($lists);
+      }}</span>人)</p>
+      
     </div>
   </div>
 </form>
@@ -71,7 +89,7 @@ id="its_game">
   >{{$list->num}}</td>
   @if($formroute==="withnumroute")
   <td class="tdquestion" style="width:70%;" data-open="close" data-num="{{$list->num}}" data-name="{{$list->full}}">
-    <input type="text" name="player">
+    <input type="text" name="player" class="input_with_num">
     <button class="numsetbtn">決定！</button>
   </td>
   @else
@@ -85,6 +103,7 @@ id="its_game">
 </tbody>
 
 </table>
+  <div class="for_bottom_space"></div>
 </div>
 
 {{-- おめでとう表示 --}}
@@ -99,8 +118,12 @@ id="its_game">
 
     if($("#totalbtn").length){
       $("#totalbtn").on("click",submit_answer1)
-    }else if($('.numsetbtn').length){
-      $(".numsetbtn").on("click",submit_answer2)
+    }
+    
+    if($('.numsetbtn').length){
+      $(".numsetbtn").each(function(i,elem){
+        submit_answer2(i,elem);
+      })
     }
 
     function submit_answer1(e){
@@ -156,26 +179,17 @@ id="its_game">
     })
   }
 
-  function submit_answer2(e){
+  function submit_answer2(i,elem){
+    $(elem).on("click",function(e){
       e.preventDefault();
-      fetch(
-          $("form").data("url"),
-          {
-            method:"post",
-            headers: {
-              'X-CSRF-TOKEN': '{{ csrf_token() }}' 
-            },
-            body:new URLSearchParams({
-                answer:$("#user_answer").val(),
-                team:$("form").data("team"),
-            })
-          }    
-      )    
-      .then((response)=>{
-        return response.json();
-      }).then((json)=>{
-        json=JSON.parse(json);
-      }
+      if($(".input_with_num").eq(i).val()===$(".tdquestion").eq(i).data("name")){
+        $(".tdquestion").eq(i).text($(".tdquestion").eq(i).data("name"));
+        elemsets=[i]
+        right_display(elemsets);
+      }else{
+        wrong_display();
+      }        
+      })
     }
   
   
@@ -198,7 +212,7 @@ id="its_game">
           // 正解マークの表示
           $("#whenright").removeClass("whenrightbase");
           $("#whenright").addClass("whenright");
-          $(".not_fixed").css("transform","translateY(225px)");
+          $(".not_fixed").css("transform","translateY(215px)");
           $("input").val("").focus();
           $("button").css({pointerEvents:"none",opacity:0.3});
           setTimeout(function(){
@@ -208,7 +222,7 @@ id="its_game">
             $("#whenright").removeClass("whenright");
             $("#whenright").addClass("whenrightbase");
             $("button").css({pointerEvents:"auto",opacity:1});
-            $(".not_fixed").css("transform","translateY(175px)");
+            $(".not_fixed").css("transform","translateY(170px)");
           },3000)
   
           // 全問正解していたら、お祝いの表示
@@ -222,13 +236,13 @@ id="its_game">
     function exist_display(){
            $("#existname").removeClass("existbase")
                            .addClass("whenexist");
-            $(".not_fixed").css("transform","translateY(225px)");
+            $(".not_fixed").css("transform","translateY(215px)");
             $("input").val("").focus();
             $("button").css({pointerEvents:"none",opacity:0.3});
             setTimeout(function(){
               $("#existname").removeClass("whenexist")
                              .addClass("existbase");
-              $(".not_fixed").css("transform","translateY(175px)");
+              $(".not_fixed").css("transform","translateY(170px)");
               $("button").css({pointerEvents:"auto",opacity:1});
             },2000);
     }
@@ -237,13 +251,13 @@ id="its_game">
     function wrong_display(){
           $("#whenwrong").removeClass("whenwrongbase")
                          .addClass("whenwrong");
-          $(".not_fixed").css("transform","translateY(225px)");
+          $(".not_fixed").css("transform","translateY(215px)");
           $("input").val("").focus();
           $("button").css({pointerEvents:"none",opacity:0.3});
           setTimeout(function(){
             $("#whenwrong").removeClass("whenwrong")
             .addClass("whenwrongbase");
-            $(".not_fixed").css("transform","translateY(175px)");
+            $(".not_fixed").css("transform","translateY(170px)");
             $("button").css({pointerEvents:"auto",opacity:1});
           },2000);
     }
@@ -256,7 +270,11 @@ id="its_game">
   </script>
 
 
-  <div class="backtopdiv"><p class="backtopp"><a class="backtopa" href="{{route("indexroute")}}">戻る</a></div>
+  <div class="backtopdiv">
+    <p class="backtopp"><a class="backtopa" href="{{route("indexroute")}}">戻る</a>
+    <span class="dataday">＊23年2月5日現在</span>
+    </p>
+  </div>
 
 
 </x-layout>
