@@ -16,9 +16,16 @@
 
 
 <form action="{{ route("selectteamroute");}}" method="post" class="firstselectform">
+  
   @csrf
-
-<div class="selectsets">
+  
+@if(count($errors)===1)
+ <div class="selectsets select_when_error">
+@elseif(count($errors)===2)
+ <div class="selectsets select_when_error2">
+@else
+ <div class="selectsets">
+@endif
 
 <div class="teamselectdiv">
 <p class="teamlabel">チーム名</p>
@@ -54,8 +61,9 @@
 @error('typeselect')
   <p class="errormessage">{{"選択してください"}}</p>
 @enderror
-
 </div>
+
+<p class="rememberrank"><a href="{{ route("recordroute")}}">正解が出た選手ランキング</a></p>
 
 <div class="postbutton">
   <button>決定！</button>

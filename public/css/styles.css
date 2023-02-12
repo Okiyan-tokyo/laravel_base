@@ -5,9 +5,10 @@ body{
   margin:0;
 }
 
-/* .topbody{
-  color:white;
-} */
+.body_not_trans{
+  opacity:1;
+  background-color:gold;
+}
 
 
 body.notransbody{
@@ -33,6 +34,20 @@ body.notransbody{
   margin-top: 40px;
 }
 
+.recordh1{
+  text-align: center;
+  font-size: 1.2em;
+  min-width: 300px;
+  width:80%;
+  max-width: 800px;
+  min-width: 300px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: dashed black 3px;
+}
 
 .toph3{
   background-color: white;
@@ -51,6 +66,18 @@ body.notransbody{
   border-bottom:black dashed 3px;
 }
 
+.recordh3{
+  font-size: 1.15em;
+  width:80%;
+  max-width: 800px;
+  min-width: 300px;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+  margin-top: 30px;
+  margin-bottom: 10px;
+}
+
 .firstselectform{
   width:80%;
   max-width: 1000px;
@@ -63,7 +90,7 @@ body.notransbody{
 
 .selectsets{
   width:100%;
-  height:90px;
+  height:95px;
   margin-left: auto;
   margin-right: auto;
   min-width: 300px;
@@ -76,6 +103,18 @@ body.notransbody{
   border-bottom:black dashed 3px;
   background-color: white;
   font-size:1.1em;
+}
+
+.select_when_error{
+  animation-name: whenerror_select;
+  animation-duration: 2s;
+  animation-fill-mode: forwards;
+}
+
+.select_when_error2{
+  animation-name: whenerror_select2;
+  animation-duration: 2s;
+  animation-fill-mode: forwards;
 }
 
 .teamselectdiv,.typeselectdiv{
@@ -116,23 +155,73 @@ select{
 .errormessage{
   color:red;
   font-size:0.9em;
-  height:30px;
-  line-height: 30px;
-  margin-top: 10px;
-  margin-bottom: 1px;
+  height:20px;
+  line-height: 20px;
+  margin-top: 1px;
+  margin-bottom: 5px;
   animation-name: whenerror;
   animation-duration: 2s;
   animation-fill-mode: forwards;
 }
 
+
+.rememberrank{
+  height:25px;
+  line-height:25px;
+  font-size:0.9em;
+  width:30%;
+  margin-left: auto;
+  margin-right: auto;
+  min-width: 200px;
+  max-width: 250px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  margin-top: 30px;
+  margin-bottom: 30px;
+  border-top:black dashed 3px;
+  border-bottom:black dashed 3px;
+  background-color: white;
+  font-size:1em;
+  text-align: center;
+}
+
+
+
+
+
+
 @keyframes whenerror{
   99.9%{
-    height:30px;
+    height:20px;
     opacity:1;
   }
   100%{
     height:0;
     opacity:0;
+  }
+}
+
+@keyframes whenerror_select{
+  0%{
+    height:120px;
+  }
+  99%{
+    height:120px;
+  }
+  100%{
+    height:90px;
+  }
+}
+
+@keyframes whenerror_select2{
+  0%{
+    height:150px;
+  }
+  99.9%{
+    height:150px;
+  }
+  100%{
+    height:90px;
   }
 }
 
@@ -227,7 +316,7 @@ select{
 
 
 
-.answertable{
+.answertable,.rank_table{
   border:black solid 3px;
   border-collapse: collapse;
   width:80%;
@@ -239,7 +328,7 @@ select{
   text-align: center;
 }
 
-.answertr,.answerth,.answertd{
+.answertr,.answerth,.answertd,.rank_tr,.rank_th,.rank_td{
   border: black solid 1px;
 }
 
@@ -271,6 +360,10 @@ select{
   min-width: 200px;
   height:45px;
   line-height:45px;
+}
+
+#numsetbtn{
+  font-size: 0.95em;
 }
 
 .correct_answers{
@@ -412,6 +505,9 @@ select{
   .rest_count2{
     font-size: 1em;
   }
+  #numsetbtn{
+    font-size: 0.9em;
+  }
 }
 @media screen and (max-width:470px){
   .toph1{
@@ -457,6 +553,9 @@ select{
   .backtopdiv{
     width:320px;
     left:calc(50% - 160px);
+  }
+  #numsetbtn{
+    font-size: 0.85em;
   }
 }
 @media screen and (max-width:320px){

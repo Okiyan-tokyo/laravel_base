@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Models\Nowlists23;
 use Nowlists23Controller;
@@ -72,6 +72,36 @@ class JteamController extends Controller
         return $json_answer;
     }
     
+    // 結果挿入
+    public function result_plus($list,$type){
+        try{
+            DB::transaction(
+                function()use(&$list,&$type){
+                        switch($type){
+                            case "full":
+                                $list->right_full++;
+                            break;
+                            case "part":
+                                $list->right_part++;
+                            break;
+                            case "withnum":
+                                $list->right_withnum++;
+                            break;
+                            default:
+                            // エラー処理
+                            // $list->right_full++;
+                            break;
+                        }
+                        $list->save();
+                    }
+                );
+            }catch(PDOException $e){
+                // エラー処理
+                $list->right_full++;
+                $list->right_part++;
+                $list->save();
+            }
+    }
     
     public function answer_full(){
         // 正解不正解,背番号セットのフラグ    
@@ -85,6 +115,7 @@ class JteamController extends Controller
             if($lists[0]===trim($list->full)){
                     $isok="ok";
                     $numset[]=$list->num;
+                    $this->result_plus($list,"full");
             }else{
                 // 外国人選手など、名前の間に・やスペースをつけた場合（半角全角ごっちゃには未対応）
                 $arraypart=explode(",",$list->part);
@@ -94,6 +125,7 @@ class JteamController extends Controller
                 if($lists[0]===$pattern1 || $lists[0]===$pattern2 || $lists[0]===$pattern3){
                     $isok="ok";
                     $numset[]=$list->num;
+                    $this->result_plus($list,"full");
                 }
             }
         }
@@ -118,6 +150,7 @@ class JteamController extends Controller
                 if($lists[0]===$namepart){
                     $isok="ok";
                     $numset[]=$list->num;
+                    $this->result_plus($list,"part");
                     goto not_require_full;
                 }
             } 
@@ -134,6 +167,7 @@ class JteamController extends Controller
                         if($lists[0]===$pattern1 || $lists[0]===$pattern2 || $lists[0]===$pattern3){
                             $isok="ok";
                             $numset[]=$list->num;
+                            $this->result_plus($list,"part");
                         }
                 }
 
@@ -144,5 +178,54 @@ class JteamController extends Controller
         exit;
     }
     
+    // 結果登録のみ/背番号セット
+    public function answer_withnum(){
+        // 共通の変数の取得
+        $lists=$this->answer_head();
+        // listsはそのチームのセット
+        foreach($lists[2] as $list){
+            // 回答は正解の背番号セットで送信されてきている
+            $numarray=explode(",",$lists[0]);
+            foreach($numarray as $num){
+             if(intval($num)===$list->num){
+                $this->result_plus($list,"withnum");
+             }
+            }
+        }
+    }
+
+    // 選手が答えられた順番
+    public function record(){
+        $table=new Nowlists23();
+
+        // フルネーム
+        $lists_full=DB::table("nowlists23s as n")
+        ->select("n.full as full","n.right_full as right_full", "t.jpn_name as team","t.red as r", "t.blue as b","t.green as g")
+        ->join("teamnames as t","n.team","=","t.eng_name")
+        ->orderBy("right_full","desc")
+        ->where("right_full",">",0)
+        ->get();
+
+        // 名前の一部
+        $lists_part=DB::table("nowlists23s as n")
+        ->select("n.full as full","n.right_part as right_part", "t.jpn_name as team","t.red as r", "t.blue as b","t.green as g")
+        ->join("teamnames as t","n.team","=","t.eng_name")
+        ->orderBy("right_part","desc")
+        ->where("right_part",">",0)
+        ->get();
+
+        // 背番号とセット
+        $lists_withnum=DB::table("nowlists23s as n")
+        ->select("n.full as full", "t.jpn_name as team", "n.right_withnum as right_withnum","t.red as r", "t.blue as b","t.green as g")
+        ->join("teamnames as t","n.team","=","t.eng_name")
+        ->orderBy("right_withnum","desc")
+        ->where("right_withnum",">",0)
+        ->get();
+        
+        $table2=new Teamname();
+        
+
+      return view("record")->with(["full"=>$lists_full,"part"=>$lists_part,"withnum"=>$lists_withnum,"rank"=>1]);
+    }
 
 }

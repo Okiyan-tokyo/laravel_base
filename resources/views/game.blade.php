@@ -21,34 +21,21 @@ id="its_game">
   @csrf
   
   <div class="user_answer_set">
-    @if($formroute!=="withnumroute")
     <div class="inputsets">
-    <input type="text" name="user_answer" id="user_answer">
-    <button id="totalbtn">決定！</button>
+      @if($formroute!=="withnumroute")
+      <input type="text" name="user_answer" id="user_answer">
+      <button id="totalbtn">決定！</button>
+      @else
+      <button id="numsetbtn">決定！</button>
+      @endif
     </div>
-    @endif
 
-    @if($formroute!=="withnumroute")
-    <div class="correct_answers">
-    @else
-    <div class="correct_answers correct_answers2">
-    @endif
-
-      @if($formroute!=="withnumroute")
-      <p class="correct_count">
-      @else
-      <p class="correct_count correct_count2">
-      @endif
+    <div class="correct_answers"> 
+     <p class="correct_count">
       <span class="countspan1">0</span>人正解</p>
-
-      @if($formroute!=="withnumroute")
       <p class="rest_count">
-      @else
-      <p class="rest_count rest_count2">
-      @endif
       (あと<span class="countspan2">{{count($lists);
-      }}</span>人)</p>
-      
+      }}</span>人)</p>      
     </div>
   </div>
 </form>
@@ -88,9 +75,9 @@ id="its_game">
   @endif
   >{{$list->num}}</td>
   @if($formroute==="withnumroute")
-  <td class="tdquestion" style="width:70%;" data-open="close" data-num="{{$list->num}}" data-name="{{$list->full}}">
-    <input type="text" name="player" class="input_with_num">
-    <button class="numsetbtn">決定！</button>
+  <td class="tdquestion" style="width:70%;" data-open="close" data-num="{{$list->num}}" data-name="{{$list->full}}" data-part="{{$list->part}}">
+  <input type="text" name="player" class="input_with_num" >
+    {{-- <button class="numsetbtn">決定！</button> --}}
   </td>
   @else
   <td class="tdquestion" data-open="close" data-num="{{$list->num}}" data-name="{{$list->full}}">？？？</td>  
@@ -115,14 +102,13 @@ id="its_game">
 <script>
   $(()=>{
 
+
     if($("#totalbtn").length){
       $("#totalbtn").on("click",submit_answer1)
     }
     
-    if($('.numsetbtn').length){
-      $(".numsetbtn").each(function(i,elem){
-        submit_answer2(i,elem);
-      })
+    if($('#numsetbtn').length){
+      $("#numsetbtn").on("click",submit_answer2)
     }
 
     function submit_answer1(e){
@@ -155,7 +141,7 @@ id="its_game">
               // 不正解ならnumsetは空
               $(".tdquestion").each(function(i,elem){
                 if(Number($(elem).data("num"))===Number(json_num)){
-                $(elem).text($(elem).data("name"));
+                // $(elem).text($(elem).data("name"));
                 // 既に正解していたら、正解リストに付け加えない
                 if($(elem).data("open")==="close"){
                   elemsets.push(i);
@@ -178,21 +164,74 @@ id="its_game">
     })
   }
 
-  function submit_answer2(i,elem){
-    $(elem).on("click",function(e){
-      e.preventDefault();
-      if($(".input_with_num").eq(i).val()===$(".tdquestion").eq(i).data("name")){
-        $(".tdquestion").eq(i).text($(".tdquestion").eq(i).data("name"));
-        elemsets=[i]
-        right_display(elemsets);
+// 背番号セットが合っているか？
+  function submit_answer2(e){
+    e.preventDefault();
+    let resultsets=[];
+    let elemsets=[];   
+    $(".input_with_num").each((i,elem)=>{
+      // 正解のパターン＝フルネームに合う、もしくはパターンの合計に合う
+      let array=["・"," ","　"];
+      // 入力されているものだけに処理
+      // パターンの合計をフルに連結
+    if($(elem).val().length>0){
+      array.forEach((item)=>{
+        let newname=$(elem).val().trim();
+        let l=10
+        do{
+          let point=newname.indexOf(item);
+          if(point>-1){
+          let firstpoint=newname.substring(0,point);
+          let secondpoint=newname.substring(point+1);
+          newname=firstpoint+secondpoint;
+          }
+          l=l+1
+        }while(newname.indexOf(item)>-1);
+        $(elem).val(newname);
+      });
+
+      // 正解なら表示
+        if($(elem).val().trim()===$(elem).closest(".tdquestion").data("name").trim()){ 
+          if($(elem).closest(".tdquestion").data("open")==="close"){         
+            $($(elem).closest($(".tdquestion"))).data("open", "open");
+            elemsets.push($(elem));
+            resultsets.push($($(elem).closest($(".tdquestion"))).data("num"));
+          }
+        }
+        $(elem).val("");
+     }
+
+    });
+
+    fetch(
+      $("form").data("url"),
+      {
+        method:"post",
+        headers: {
+              'X-CSRF-TOKEN': '{{ csrf_token() }}' 
+            },
+        body:new URLSearchParams({
+          answer:resultsets.join(","),
+          team:$("form").data("team")
+        })
+      }
+    )
+
+
+      if(elemsets.length>0){
+        right_display2(elemsets);
       }else{
-        wrong_display();
-      }        
-      })
-    }
+        wrong_display();    
+      }
+
+  }
+
+
+
+
   
   
-      // 正解
+      // 正解(単独)
       function right_display(elemsets){
           // 正解の背番号の名前を開ける
           // それ以外の欄を消す
@@ -201,6 +240,7 @@ id="its_game">
               if(!elemsets.includes(i)){
                 $(elem).closest('tr').css("visibility","collapse");
               }else{
+                $(elem).text($(elem).data("name"));
                 $(elem).closest('tr').css("background-color","gold");
                 $(elem).closest('tr').css("color","black");
                 $(".countspan1").text(Number($(".countspan1").text())+1);
@@ -211,7 +251,54 @@ id="its_game">
           // 正解マークの表示
           $("#whenright").removeClass("whenrightbase");
           $("#whenright").addClass("whenright");
-          $(".not_fixed").css("transform","translateY(215px)");
+          $(".not_fixed").css("transform","translateY(220px)");
+          $("input").val("").focus();
+          $("button").css({pointerEvents:"none",opacity:0.3});
+          setTimeout(function(){
+            $(".tdquestion").each(function(i,elem){
+              $(elem).closest('tr').css("visibility","visible");
+            })
+            $("#whenright").removeClass("whenright");
+            $("#whenright").addClass("whenrightbase");
+            $("button").css({pointerEvents:"auto",opacity:1});
+            $(".not_fixed").css("transform","translateY(170px)");
+          },3000)
+  
+          // 全問正解していたら、お祝いの表示
+          if(Number($(".countspan2").text())===0){
+            $(".congratulation").addClass("congraadd");
+            $(".congratulation").css("display","block");
+           }
+    }
+  
+      // 正解(背番号とセット)
+      function right_display2(elemsets){
+          // 正解の背番号の名前を開ける
+          // それ以外の欄を消す
+          // 正解の数を１つ増やす
+            $(".tdquestion").each(function(i,elem){
+                $(elem).closest('tr').css("visibility","collapse");
+            });
+              
+            $(elemsets).each((eachi,eachinput)=>{
+              const opentr=$(eachinput).closest("tr");
+              const opentd=$(eachinput).closest("td");
+              $(opentr).css("visibility","visible")
+                        .css("background-color","gold")
+                        .css("color","black");
+              $(opentd).text($(opentd).data("name"));
+              $(".countspan1").text(Number($(".countspan1").text())+1);
+              $(".countspan2").text(Number($(".countspan2").text())-1);
+            });
+            
+
+          // 正解マークの表示
+          $(".answermark").text(elemsets.length+"人正解！");
+          $(".answermark").css("padding-left","2px")
+                          .css("padding-right","2px")
+          $("#whenright").removeClass("whenrightbase");
+          $("#whenright").addClass("whenright");
+          $(".not_fixed").css("transform","translateY(220px)");
           $("input").val("").focus();
           $("button").css({pointerEvents:"none",opacity:0.3});
           setTimeout(function(){
