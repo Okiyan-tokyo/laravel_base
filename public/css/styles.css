@@ -35,18 +35,20 @@ body.notransbody{
 }
 
 .recordh1{
+  background-color: white;
   text-align: center;
   font-size: 1.2em;
   min-width: 300px;
   width:80%;
-  max-width: 800px;
+  height:45px;
+  line-height:45px;
+  max-width: 700px;
   min-width: 300px;
   margin-left: auto;
   margin-right: auto;
   margin-top: 20px;
   margin-bottom: 20px;
-  padding-bottom: 10px;
-  border-bottom: dashed black 3px;
+  border:black solid 3px;
 }
 
 .toph3{
@@ -67,15 +69,20 @@ body.notransbody{
 }
 
 .recordh3{
+  background-color: white;
   font-size: 1.15em;
   width:80%;
-  max-width: 800px;
+  max-width: 700px;
   min-width: 300px;
   margin-left: auto;
   margin-right: auto;
   text-align: center;
   margin-top: 30px;
-  margin-bottom: 10px;
+  margin-bottom: 0px;
+  border-top:black solid 3px;
+  border-right:black solid 3px;
+  border-left:black solid 3px;
+  box-sizing: border-box;
 }
 
 .firstselectform{
@@ -184,7 +191,6 @@ select{
   font-size:1em;
   text-align: center;
 }
-
 
 
 
@@ -324,12 +330,20 @@ select{
   min-width: 280px;
   margin-left: auto;
   margin-right: auto;
-  margin-top: 10px;
   text-align: center;
 }
 
-.answertr,.answerth,.answertd,.rank_tr,.rank_th,.rank_td{
+.answertable{
+  margin-top: 10px;
+}
+
+.answertr,.answerth,.answertd,.rank_trhead,.rank_tr,.rank_th,.rank_td{
   border: black solid 1px;
+}
+
+
+.rank_table>thead{
+  background-color: white;
 }
 
 .answer{

@@ -9,6 +9,19 @@ $(()=>{
     $("body").addClass("bodytrans");
   }
 
+if($(".recordh1").length){
+  $(".rank_tr").each((i,elem)=>{
+    const red=$(elem).data("r");
+    const blue=$(elem).data("b");
+    const green=$(elem).data("g");
+    
+    if ((red * 0.299 + green * 0.587 + blue * 0.114) < 186) {
+      $(elem).css("color","white");
+    }
+  })
+}
+
+
   function colorset(){
   const color=$("body").css("background-color");
     const firstconma=color.indexOf(",");
