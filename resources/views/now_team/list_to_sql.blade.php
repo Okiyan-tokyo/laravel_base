@@ -1,6 +1,8 @@
 <?php
 use App\Models\Nowlists23;
 
+// /teamgo
+
 // まずは全件削除
 Nowlists23::truncate();
 
@@ -12,6 +14,9 @@ Nowlists23::truncate();
 // laravelならこれ
 $txtfiles=glob(resource_path()."/views/now_team/team_name/*.txt");
 
+echo count($txtfiles);
+
+exit;
 
 // 正規表現
 
