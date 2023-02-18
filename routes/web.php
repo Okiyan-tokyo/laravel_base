@@ -51,3 +51,7 @@ Route::post("/posts.withnum",[JteamController::class,"answer_withnum"])
 // 成績表
 Route::get("record",[JteamController::class,"record"])
 ->name("recordroute");
+
+// エラーページ
+Route::get("error",[JteamController::class,"whenerror"])
+->name("errorroute");

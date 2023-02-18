@@ -4,6 +4,9 @@
 <body class="body_not_trans" style="background: url({{url("img/img2.jpg")}});background-size:contain;">
 
 <h1 class="recordh1">回答された選手ランキング</h1>
+
+<div class="recordtablepoint" >
+
 <h3 class="recordh3">フルネームで回答</h3>
 <table class="rank_table">
   <thead>
@@ -89,9 +92,10 @@
 </tbody>
 </table>
 
+</div>
 
-<div class="backtopdiv">
-  <p class="backtopp"><a class="backtopa" href="{{route("indexroute")}}">戻る</a>
+<div class="backtopdiv2">
+  <p class="backtopp2"><a class="backtopa" href="{{route("indexroute")}}">戻る</a>
   </p>
 </div>
 

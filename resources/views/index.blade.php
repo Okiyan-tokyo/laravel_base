@@ -33,15 +33,27 @@
   <option hidden value="">選択してください</option>
       <optgroup label="J1"></optgroup>
       @foreach ($J1lists as $J1list)
-      <option name="teamselect" value={{$J1list->eng_name}}>{{$J1list->jpn_name}}</option>
+      <option name="teamselect" value={{$J1list->eng_name}}
+        @if(old("teamselect")===$J1list->eng_name)
+        selected
+        @endif
+        >{{$J1list->jpn_name}}</option>
       @endforeach
       <optgroup label="J2"></optgroup>
       @foreach ($J2lists as $J2list)
-      <option name="teamselect" value={{$J2list->eng_name}}>{{$J2list->jpn_name}}</option>
+      <option name="teamselect" value={{$J2list->eng_name}}
+        @if(old("teamselect")===$J2list->eng_name)
+        selected
+        @endif
+        >{{$J2list->jpn_name}}</option>
       @endforeach
       <optgroup label="J3"></optgroup>
       @foreach ($J3lists as $J3list)
-        <option name="teamselect" value={{$J3list->eng_name}}>{{$J3list->jpn_name}}</option>
+        <option name="teamselect" value={{$J3list->eng_name}}
+          @if(old("teamselect")===$J3list->eng_name)
+          selected
+          @endif  
+          >{{$J3list->jpn_name}}</option>
       @endforeach
 <select>
 </div>

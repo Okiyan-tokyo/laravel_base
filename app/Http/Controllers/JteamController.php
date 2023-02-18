@@ -7,6 +7,7 @@ use App\Models\Nowlists23;
 use Nowlists23Controller;
 use App\Models\Teamname;
 use App\Enums\PublishStateType;
+use Illuminate\Http\JsonResponse;
 
 class JteamController extends Controller
 {
@@ -35,7 +36,14 @@ class JteamController extends Controller
         $team=$request->teamselect;
         $type=$request->typeselect;
 
+        // チーム名がデータ以外から来ていたらここで変更
+        if(!$this->team_isok($team)){
+            return redirect()->route("errorroute",[
+                "reason"=>"team"
+            ]);
+       }
 
+        // タイプによってgame画面でのルーティングの仕分け
         switch($type){
             case "full":
                 $formroute="fullroute";
@@ -47,7 +55,9 @@ class JteamController extends Controller
                 $formroute="withnumroute";
             break;
             default:
-                $formroute="errorroute";
+               return redirect()->route("errorroute",[
+                   "reason"=>"type"
+               ]);
             break;
         }
 
@@ -58,18 +68,32 @@ class JteamController extends Controller
         ]);
     }
 
+    // チーム名の例外処理
+    public function team_isok($team){
+        // チーム名がデータ以外から来ていたらここで変更
+        $baseteams=Teamname::get("eng_name");
+        foreach($baseteams as $baseteam){
+            if($baseteam["eng_name"]==$team){
+                goto okteam;
+            }
+          }
+          return false;
+          okteam:
+          return true;
+    }
+
     public function answer_head(){
         $answer=self::h(filter_input(INPUT_POST,"answer"));
         $team=self::h(filter_input(INPUT_POST,"team"));
-        // 該当チームのリスト
-        $lists=Nowlists23::where("team","=",$team)->get();
-        return [$answer,$team,$lists];
-    }
-    
-    public function answer_foot($isok,$numset){
-        $json_answer=json_encode(["isok"=>$isok,"numset"=>$numset]);
-        header("Content-Type: application/json; charset=utf-8");
-        return $json_answer;
+
+        // チーム名が例外の場合
+        if(!$this->team_isok($team)){
+            return ["","error",""];
+        }else{
+            // 該当チームのリスト
+            $lists=Nowlists23::where("team","=",$team)->get();
+            return [$answer,$team,$lists];
+        }
     }
     
     // 結果挿入
@@ -89,17 +113,15 @@ class JteamController extends Controller
                             break;
                             default:
                             // エラー処理
-                            // $list->right_full++;
-                            break;
-                        }
-                        $list->save();
+                            // 結果を記録登録だけなので無視する
+                        break;
                     }
-                );
-            }catch(PDOException $e){
-                // エラー処理
-                $list->right_full++;
-                $list->right_part++;
-                $list->save();
+                    $list->save();
+                }
+            );
+        }catch(PDOException $e){
+            // エラー処理
+            // 結果を記録登録だけなので無視する
             }
     }
     
@@ -109,7 +131,14 @@ class JteamController extends Controller
         $numset=[];
         // 共通の変数の取得
         $lists=$this->answer_head();
-    
+
+
+        // チーム名が例外なら終了
+        if($lists[1]==="error"){
+            return response()->json(["isok"=>"error"]);
+            exit;
+        }
+
         // lists[2]はそのチームのセット
         foreach($lists[2] as $list){
             if($lists[0]===trim($list->full)){
@@ -130,17 +159,24 @@ class JteamController extends Controller
             }
         }
         // 共通の処理
-        return json_encode($this->answer_foot($isok,$numset));
+        return response()->json(["isok"=>$isok,"numset"=>$numset]);
         exit;
     }
 
 
     public function answer_part(){
+
         // 正解不正解,背番号セットのフラグ    
         $isok="out";
         $numset=[];
         // 共通の変数の取得
         $lists=$this->answer_head();
+
+        if($lists[1]==="error"){
+            return response()->json(["isok"=>"error"]);
+            exit;
+        }
+
 
         // listsはそのチームのセット
         foreach($lists[2] as $list){
@@ -174,7 +210,7 @@ class JteamController extends Controller
             not_require_full:
         }
         // 共通の処理
-        return json_encode($this->answer_foot($isok,$numset));
+        return response()->json(["isok"=>$isok,"numset"=>$numset]);
         exit;
     }
     
@@ -226,6 +262,12 @@ class JteamController extends Controller
         
 
       return view("record")->with(["full"=>$lists_full,"part"=>$lists_part,"withnum"=>$lists_withnum,"rank"=>1]);
+    }
+
+
+    public function whenerror(Request $request){
+        $ptn=$request->query("reason");
+        return view("error")->with(["ptn"=>$ptn]);
     }
 
 }

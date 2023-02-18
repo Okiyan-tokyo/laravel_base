@@ -99,6 +99,8 @@ id="its_game">
   <p><a  style="color:white" href="{{route("indexroute")}}">戻る</a></p>
 </div>
 
+<span id="toerror" data-url="{{route("errorroute")}}"></span>
+
 <script>
   $(()=>{
 
@@ -129,8 +131,15 @@ id="its_game">
       .then((response)=>{
         return response.json();
       }).then((json)=>{
-        json=JSON.parse(json);
-    
+
+
+        // コードのエラーが返された時
+        if(json.isok==="error"){
+          location.href=$("#toerror").data("url")+"?reason=team";
+          return;
+        }
+
+
         if(json.isok==="ok"){
           // 正解の場合
           // 処理する要素の番号を格納
@@ -265,9 +274,15 @@ id="its_game">
           },3000)
   
           // 全問正解していたら、お祝いの表示
-          if(Number($(".countspan2").text())===0){
-            $(".congratulation").addClass("congraadd");
-            $(".congratulation").css("display","block");
+          // if(Number($(".countspan2").text())===0){
+
+          if(Number($(".countspan2").text())===32){
+            setTimeout(function(){
+              $("button").css({pointerEvents:"none",opacity:0.3});
+              $("input").blur();
+              $(".congratulation").addClass("congraadd");
+              $(".congratulation").css("display","block");
+            },3100)
            }
     }
   
