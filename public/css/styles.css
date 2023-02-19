@@ -1,15 +1,59 @@
 body{
-  background-color: aqua;
+  opacity:0;
+  transition-property:opacity;
+  transition-duration:5s;
+  margin:0;
+}
+
+.body_not_trans{
+  opacity:1;
+  background-color:gold;
+}
+
+
+body.notransbody{
+  opacity:1;
+}
+
+.bodytrans{
+  opacity:1;
 }
 
 .toph1{
+  background-color: white;
   text-align: center;
-  font-size: 3em;
+  font-size: 2.3em;
+  min-width: 300px;
+  width:80%;
+  max-width: 1000px;
+  min-width: 300px;
+  margin-left: auto;
+  margin-right: auto;
+  border-top:black dashed 3px;
+  border-bottom:black dashed 3px;
+  margin-top: 40px;
 }
 
+.recordh1{
+  background-color: white;
+  text-align: center;
+  font-size: 1.2em;
+  min-width: 300px;
+  width:80%;
+  height:45px;
+  line-height:45px;
+  max-width: 700px;
+  min-width: 300px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  border:black solid 3px;
+}
 
 .toph3{
-  font-size: 2em;
+  background-color: white;
+  font-size: 1.5em;
   width:80%;
   max-width: 1000px;
   min-width: 300px;
@@ -24,6 +68,23 @@ body{
   border-bottom:black dashed 3px;
 }
 
+.recordh3{
+  background-color: white;
+  font-size: 1.15em;
+  width:80%;
+  max-width: 700px;
+  min-width: 280px;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+  margin-top: 30px;
+  margin-bottom: 0px;
+  border-top:black solid 3px;
+  border-right:black solid 3px;
+  border-left:black solid 3px;
+  box-sizing: border-box;
+}
+
 .firstselectform{
   width:80%;
   max-width: 1000px;
@@ -31,22 +92,52 @@ body{
   margin-left: auto;
   margin-right: auto;
   text-align: center;
-  font-size: 1.5em;
+  font-size: 1em;
 }
 
 .selectsets{
-  /* display:flex; */
-  width:65%;
+  width:100%;
+  height:95px;
   margin-left: auto;
   margin-right: auto;
   min-width: 300px;
-  max-width: 700px;
-  /* justify-content: space-around; */
+  max-width: 1000px;
+  padding-top: 7.5px;
+  padding-bottom: 7.5px;
+  margin-top: 30px;
+  margin-bottom: 30px;
+  border-top:black dashed 3px;
+  border-bottom:black dashed 3px;
+  background-color: white;
+  font-size:1.1em;
+}
+
+.select_when_error{
+  animation-name: whenerror_select;
+  animation-duration: 2s;
+  animation-fill-mode: forwards;
+}
+
+.select_when_error2{
+  animation-name: whenerror_select2;
+  animation-duration: 2s;
+  animation-fill-mode: forwards;
 }
 
 .teamselectdiv,.typeselectdiv{
   display:flex;
   margin-top: 30px;
+  width:40%;
+  min-width: 260px;
+  max-width:700px;
+  margin-left: auto;
+  margin-right: auto;
+  height:35px;
+  line-height: 35px;
+  margin-top: 0;
+  margin-bottom: 0;
+  padding-top: 5px;
+  padding-bottom: 5px;
 }
 
 .teamlabel,.typelabel{
@@ -56,13 +147,542 @@ body{
 }
 
 select{
-  font-size: 1em;
+  font-size: 1.1em;
   margin-left: auto;
 }
 
+.postbutton{
+  margin-bottom: 20px;
+}
 
+.postbutton>button{
+  font-size: 1.1em;
+}
+
+.errormessage{
+  color:red;
+  font-size:0.9em;
+  height:20px;
+  line-height: 20px;
+  margin-top: 1px;
+  margin-bottom: 5px;
+  animation-name: whenerror;
+  animation-duration: 2s;
+  animation-fill-mode: forwards;
+}
+
+
+.rememberrank{
+  height:25px;
+  line-height:25px;
+  font-size:0.9em;
+  width:30%;
+  margin-left: auto;
+  margin-right: auto;
+  min-width: 200px;
+  max-width: 250px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  margin-top: 30px;
+  margin-bottom: 30px;
+  border-top:black dashed 3px;
+  border-bottom:black dashed 3px;
+  background-color: white;
+  font-size:1em;
+  text-align: center;
+}
+
+
+
+
+
+@keyframes whenerror{
+  99.9%{
+    height:20px;
+    opacity:1;
+  }
+  100%{
+    height:0;
+    opacity:0;
+  }
+}
+
+@keyframes whenerror_select{
+  0%{
+    height:120px;
+  }
+  99%{
+    height:120px;
+  }
+  100%{
+    height:95px;
+  }
+}
+
+@keyframes whenerror_select2{
+  0%{
+    height:150px;
+  }
+  99.9%{
+    height:150px;
+  }
+  100%{
+    height:95px;
+  }
+}
+
+@keyframes whenerror_select3{
+  0%{
+    height:110px;
+  }
+  99.9%{
+    height:110px;
+  }
+  100%{
+    height:85px;
+  }
+}
+
+@keyframes whenerror_select4{
+  0%{
+    height:140px;
+  }
+  99.9%{
+    height:140px;
+  }
+  100%{
+    height:85px;
+  }
+}
 
 /* 解答ページ */
+
+.fixed_top{
+  position: fixed;
+  top:0;
+  z-index:50;
+  height:170px;
+  width:100%;
+}
+
+.not_fixed{
+  position:relative;
+  transform: translateY(170px);
+  z-index: 1;
+}
+
+.toph2{
+  position: relative;
+  font-size: 1.7em;
+  width:80%;
+  max-width: 800px;
+  min-width: 300px;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+  margin-top: 15px;
+  margin-bottom: 20px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  border-bottom:black dashed 3px;
+  margin-bottom: 10px;
+}
+
+.whenwrongbase,.whenrightbase,.existbase{
+  margin-top: 0;
+  margin-bottom: 0;
+  visibility:hidden;
+  opacity:0;
+  height:0;
+}
+
+.whenright,.whenwrong,.whenexist{
+  margin-top: 10px;
+  margin-bottom: 10px;
+  border-radius: 10px;
+  visibility:visible;
+  opacity:1;
+  height:50px;
+  line-height:50px;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+  font-weight: bold;
+}
+
+.whenwrong{
+  width:50px;
+  font-size: 2.8em;
+  background-color: grey;
+  color:black;
+}
+
+.whenexist{
+  font-size:1.2em;
+  width:120px;
+  background-color: grey;
+  color:black;
+}
+
+.whenright{
+  width:100px;
+  font-size:1.2em;
+  background-color: gold;
+  /* text-shadow:1px 1px black;
+  text-shadow:-1px -1px black; */
+  color:black;
+  border:white double 5px;
+  animation-name:rightanime;
+  animation-duration:1.5s;
+  animation-iteration-count: 2;
+}
+
+@keyframes rightanime{
+  50%{
+    visibility: hidden;
+    opacity: 0;
+  }
+}
+
+
+
+.answertable,.rank_table{
+  border:black solid 3px;
+  border-collapse: collapse;
+  width:80%;
+  max-width: 700px;
+  min-width: 280px;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+
+.answertable{
+  margin-top: 10px;
+}
+
+.answertr,.answerth,.answertd,.rank_trhead,.rank_tr,.rank_th,.rank_td{
+  border: black solid 1px;
+}
+
+.rank_tr_none{
+  background-color: white;
+}
+
+
+.recordtablepoint{
+  margin-bottom: 70px;
+}
+
+
+.rank_table>thead{
+  background-color: white;
+}
+
 .answer{
   display:none;
 }
+
+.input_with_num{
+  width:50%;
+  max-width: 700px;
+  min-width: 80px;
+}
+
+.user_answer_set{
+  width:80%;
+  max-width: 800px;
+  min-width: 300px;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+  display: flex;
+  justify-content: space-around;
+  padding-bottom: 15px;
+  border-bottom: black dashed 3px;
+}
+
+.inputsets{
+  width:50%;
+  min-width: 200px;
+  height:45px;
+  line-height:45px;
+}
+
+#numsetbtn{
+  font-size: 0.95em;
+}
+
+.correct_answers{
+  height:45px;
+  text-align: center;
+  width:30%;
+  min-width: 120px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.correct_answers2{
+  height:50px;
+}
+
+.correct_count,.rest_count{
+  width:100px;
+  text-align: center;
+  margin-top: 0;
+  margin-bottom: 0;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.correct_count2{
+  font-size: 1.2em;
+}
+
+.rest_count{
+  font-size:0.9em;
+}
+
+.rest_count2{
+  font-size:1.1em;
+}
+
+
+.for_bottom_space{
+  width:100%;
+  height:55px;
+}
+
+.congratulation{
+  display:none;
+  position:fixed;
+  left:calc(50% - 250px);
+  top:120px;
+  width:500px;
+  height:140px;
+  background-color: black;
+  color:gold;
+  text-align: center;
+  font-size:1.3em;
+  z-index:100;
+  transform:scale(0,0);
+}
+
+.congratulation>p{
+  height:32.5px;
+  line-height: 32.5px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.congraadd{
+  animation-name:congratulate;
+  animation-duration: 2s;
+  animation-fill-mode: forwards;
+  transform: scale(0,0);
+}
+
+@keyframes congratulate{
+  0%{
+    transform: scale(0,0);
+  }
+  100%{
+    transform: scale(1,1);
+  }
+}
+
+
+.backtopdiv{
+  text-align: center;
+  position: fixed;
+  width:80%;
+  left:10%;
+  bottom:0;
+  z-index:30;
+}
+
+.backtopp{
+  margin-top: 5px;
+  margin-bottom: 5px;
+  padding-top:5px;
+  height:30px;
+  line-height:30px;
+  width:100%;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+  border-top:black dashed 3px;
+  display: flex;
+  justify-content: center;
+}
+
+.backtopdiv2{
+  text-align: center;
+  position: fixed;
+  height:30px;
+  line-height:30px;
+  width:100%;
+  /* left:10%; */
+  bottom:20px;
+  z-index:30;
+}
+
+.backtopp2{
+  margin-top: 0px;
+  margin-bottom: 0px;
+  height:30px;
+  line-height:30px;
+  width:80%;
+  max-width: 700px;
+  min-width: 280px;
+  margin-left: auto;
+  margin-right: auto;
+  border-top:white dashed 3px;
+  background-color:rgba(255,255,255,0.8);
+  color:blue;
+}
+
+.dataday{
+  width:20%;
+  min-width: 130px;
+  display: inline-block;
+  font-size: 0.9em;
+  font-weight: bold;
+}
+
+.backtopp>a{
+  margin-left: auto;
+  margin-right: auto;
+  display: inline-block;
+  text-align: center;
+}
+
+/* レスポンシブ */
+
+@media screen and (max-width:650px){
+  .toph1{
+    font-size:1.8em;
+  }
+}
+@media screen and (max-width:550px){
+  .toph1{
+    font-size:1.65em;
+  }
+  .toph3{
+    font-size:1.25em;
+  }
+  #user_answer{
+    width:100px;
+  }
+  .inputsets>button{
+    font-size:0.7em;
+  }
+  select,.postbutton>button{
+    font-size:1em;
+  }
+  .selectsets{
+    height:80px;
+  }
+  .select_when_error{
+    animation-name: whenerror_select3;
+    animation-duration: 2s;
+    animation-fill-mode: forwards;
+  }
+  .select_when_error2{
+    animation-name: whenerror_select4;
+    animation-duration: 2s;
+    animation-fill-mode: forwards;
+  }
+  .teamselectdiv,.typeselectdiv{
+    font-size: 0.9em;
+    min-width: 230px;
+    height: 30px;
+    line-height: 30px;
+  }
+  .correct_count2{
+    font-size: 1.1em;
+  }
+  .rest_count2{
+    font-size: 1em;
+  }
+  #numsetbtn{
+    font-size: 0.9em;
+  }
+}
+@media screen and (max-width:470px){
+  .toph1{
+    font-size:1.4em;
+  }
+}
+@media screen and (max-width:450px){
+  .toph3{
+    font-size:1.1em;
+  }
+  .toph2{
+    padding-left: 0;
+    padding-right: 0;
+    font-size:1.5em;
+  }
+  select,.postbutton>button{
+    font-size:0.95em;
+  }
+  .correct_count:not(.correct_count2){
+    margin-left: 0;
+  }
+  .rest_count:not(.rest_count2){
+    margin-left: 0;
+  }
+  .teamselectdiv,.typeselectdiv{
+    min-width: 210px;
+  }
+}
+@media screen and (max-width:405px){
+  .toph1{
+    font-size:1.3em;
+  }
+  .fixed_top{
+    width:320px;
+    left:calc(50% - 160px);
+  }
+  .congratulation{
+    top:115px;
+    width:100%;
+    left:0px;
+    font-size: 1.1em;
+  }
+  .backtopdiv{
+    width:320px;
+    left:calc(50% - 160px);
+  }
+  #numsetbtn{
+    font-size: 0.85em;
+  }
+  select{
+    font-size: 0.85em;
+  }
+}
+@media screen and (max-width:320px){
+  .toph3{
+    font-size:1em;
+  }
+  .toph2{
+    width:300px;
+    left:calc(50% - 150px);
+    min-width: 300px;
+    font-size:1.3em;
+  }
+  select,.postbutton>button{
+    font-size:0.9em;
+  }
+  .congratulation{
+    font-size: 1em;
+    min-width: 300px;
+  }
+  .fixed_top,.backtopdiv{
+    width:300px;
+    left:0;
+    margin-left: 0;
+    margin-right: 0;
+  }
+}
+

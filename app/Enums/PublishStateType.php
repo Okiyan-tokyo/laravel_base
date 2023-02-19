@@ -2,6 +2,7 @@
 
 namespace App\Enums;
 
+// use BenSampo\Enum\Contracts\LocalizedEnum;
 use BenSampo\Enum\Enum;
 
 /**
@@ -14,8 +15,9 @@ final class PublishStateType extends Enum
     const J1 = 0;
     const J2 = 1;
     const J3 = 2;
+    const error = 3;
 
-    public function getcateteam($cate){
+    public static function getcateteam($cate){
         switch($cate){
             case self::J1:
             return "J1";
@@ -28,7 +30,6 @@ final class PublishStateType extends Enum
             break;
             default:
             return "nocate";
-            exit;
             break;
         }
     }

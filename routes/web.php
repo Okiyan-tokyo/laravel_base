@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\JteamController;
-use App\Http\Controllers\Nowlists22Controller;
+use App\Http\Controllers\Nowlists23Controller;
 
 
 /*
@@ -30,5 +30,28 @@ Route::get('/teamgo',function(){
 );
 
 // チーム名をSQL登録
-Route::get('/nowteam/teamname/team_to_sql',[Nowlists22Controller::class,"teamname_to_sql"]
+Route::get('/nowteam/teamname/team_to_sql',[Nowlists23Controller::class,"teamname_to_sql"]
 );
+
+
+// フルネームが正しいか
+Route::post("/posts.full",[JteamController::class,"answer_full"])
+->name("fullroute");
+
+
+// 名前の一部分が正しいか
+Route::post("/posts.part",[JteamController::class,"answer_part"])
+->name("partroute");
+
+
+// 背番号セットが正しいか
+Route::post("/posts.withnum",[JteamController::class,"answer_withnum"])
+->name("withnumroute");
+
+// 成績表
+Route::get("record",[JteamController::class,"record"])
+->name("recordroute");
+
+// エラーページ
+Route::get("error",[JteamController::class,"whenerror"])
+->name("errorroute");
