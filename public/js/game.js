@@ -1,8 +1,9 @@
 $(()=>{
 
   if($("#its_game").length){
-    $("body,.fixed_top,.backtopdiv").css("background-color",'rgb('+$("body").data("red")+","+$("body").data("blue")+","+$("body").data("green")+')');
+    $("body,.fixed_top,.backtopdiv").css("background-color",'rgb('+$("body").data("red")+","+$("body").data("green")+","+$("body").data("blue")+')');
     $("body").css("color",colorset());
+    console.log($("body").css("background-color"));
   }
 
   if(!$("body.notransbody").length){
@@ -12,8 +13,8 @@ $(()=>{
 if($(".recordh1").length){
   $(".rank_tr").each((i,elem)=>{
     const red=$(elem).data("r");
-    const blue=$(elem).data("b");
     const green=$(elem).data("g");
+    const blue=$(elem).data("b");
     
     if ((red * 0.299 + green * 0.587 + blue * 0.114) < 186) {
       $(elem).css("color","white");
@@ -32,7 +33,8 @@ if($(".recordh1").length){
     var newcolor = 'black';
     if ((red * 0.299 + green * 0.587 + blue * 0.114) < 186) {
         newcolor = 'white';
-        $("table,tr,th,td,.toph2,.user_answer_set").css("border-color","white");
+        $("table,tr,th,td,.toph2,.user_answer_set,.backtopp").css("border-color","white");
+        $(".backtopa").css("color","white");
     }
     return newcolor;
  }

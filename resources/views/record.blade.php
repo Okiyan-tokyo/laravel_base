@@ -22,7 +22,7 @@
     @if(isset($prev_full) && $prev_full>$f->right_full)
       <?php $rank++; ?>
     @endif
-    <tr class="rank_tr" style="background-color:rgb({{$f->r}},{{$f->b}},{{$f->g}})" data-r="{{$f->r}}" data-b="{{$f->b}}" data-g="{{$f->g}}">
+    <tr class="rank_tr" style="background-color:rgb({{$f->r}},{{$f->g}},{{$f->b}})" data-r="{{$f->r}}" data-b="{{$f->b}}" data-g="{{$f->g}}">
       <td class="rank_td">{{ $rank }}</td>
       <td class="rank_td">{{ $f->full }}</td>
       <td class="rank_td">{{ $f->team }}</td>
@@ -30,7 +30,7 @@
     </tr>
     <?php  $prev_full=$f->right_full; ?>
   @empty    
-    <tr>{{まだ解かれていません}}</tr>
+    <tr class="rank_tr_none" ><td class="rank_td_none"  colspan="4">まだ解かれていません</td></tr>
   @endforelse
 </tbody>
 </table>
@@ -51,7 +51,7 @@
     @if(isset($prev_part) && $prev_part>$p->right_part)
       <?php $rank++; ?>
     @endif
-<tr class="rank_tr" style="background-color:rgb({{$p->r}},{{$p->b}},{{$p->g}})" data-r="{{$p->r}}" data-b="{{$p->b}}" data-g="{{$p->g}}">
+<tr class="rank_tr" style="background-color:rgb({{$p->r}},{{$p->g}},{{$p->b}})" data-r="{{$p->r}}" data-b="{{$p->b}}" data-g="{{$p->g}}">
       <td class="rank_td">{{ $rank }}</td>
       <td class="rank_td">{{ $p->full }}</td>
       <td class="rank_td">{{ $p->team }}</td>
@@ -59,7 +59,7 @@
     </tr>
     <?php  $prev_part=$p->right_part; ?>
   @empty    
-    <tr>{{まだ解かれていません}}</tr>
+  <tr class="rank_tr_none" ><td class="rank_td_none"  colspan="4">まだ解かれていません</td></tr>
   @endforelse
 </tbody>
 </table>
@@ -79,7 +79,7 @@
     @if(isset($prev_withnum) && $prev_withnum>$w->right_withnum)
       <?php $rank++; ?>
     @endif
-    <tr class="rank_tr" style="background-color:rgb({{$w->r}},{{$w->b}},{{$w->g}})" data-r="{{$w->r}}" data-b="{{$w->b}}" data-g="{{$w->g}}">
+    <tr class="rank_tr" style="background-color:rgb({{$w->r}},{{$w->g}},{{$w->b}})" data-r="{{$w->r}}" data-b="{{$w->b}}" data-g="{{$w->g}}">
       <td class="rank_td">{{ $rank }}</td>
       <td class="rank_td">{{ $w->full }}</td>
       <td class="rank_td">{{ $w->team }}</td>
@@ -87,7 +87,7 @@
     </tr>
     <?php  $prev_withnum=$w->right_withnum; ?>
   @empty    
-    <tr>{{まだ解かれていません}}</tr>
+    <tr class="rank_tr_none" ><td class="rank_td_none"  colspan="4">まだ解かれていません</td></tr>
   @endforelse
 </tbody>
 </table>

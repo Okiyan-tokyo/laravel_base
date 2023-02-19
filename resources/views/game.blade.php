@@ -101,6 +101,16 @@ id="its_game">
 
 <span id="toerror" data-url="{{route("errorroute")}}"></span>
 
+
+
+<div class="backtopdiv">
+  <p class="backtopp"><a class="backtopa" href="{{route("indexroute")}}">戻る</a>
+  <span class="dataday">＊23年2月5日現在</span>
+  </p>
+</div>
+
+
+
 <script>
   $(()=>{
 
@@ -371,11 +381,6 @@ id="its_game">
   </script>
 
 
-  <div class="backtopdiv">
-    <p class="backtopp"><a class="backtopa" href="{{route("indexroute")}}">戻る</a>
-    <span class="dataday">＊23年2月5日現在</span>
-    </p>
-  </div>
 
 
 </x-layout>

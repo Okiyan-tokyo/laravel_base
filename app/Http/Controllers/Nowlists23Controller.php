@@ -1,5 +1,7 @@
 <?php
 
+// /nowteam/teamname/team_to_sql
+
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
@@ -20,7 +22,7 @@ class Nowlists23Controller extends Controller
             ["kawasaki","川崎","J1",53,160,217],
             ["yokohama_fm","横浜FM","J1",0,57,137],
             ["yokohama_fc","横浜FC","J1",0,160,228],
-            ["syonan","湘南","J1",103,180,100],
+            ["shonan","湘南","J1",103,180,100],
             ["niigata","新潟","J1",255,102,0],
             ["nagoya","名古屋","J1",218,54,27],
             ["kyoto","京都","J1",116,0,107],
