@@ -261,7 +261,7 @@ class JteamController extends Controller
         $table2=new Teamname();
         
 
-      return view("record")->with(["full"=>$lists_full,"part"=>$lists_part,"withnum"=>$lists_withnum,"rank"=>1]);
+      return view("record")->with(["lists_array"=>[[$lists_full,"full"],[$lists_part,"part"],[$lists_withnum,"withnum"]]]);
     }
 
 

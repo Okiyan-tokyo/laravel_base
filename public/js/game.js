@@ -3,7 +3,6 @@ $(()=>{
   if($("#its_game").length){
     $("body,.fixed_top,.backtopdiv").css("background-color",'rgb('+$("body").data("red")+","+$("body").data("green")+","+$("body").data("blue")+')');
     $("body").css("color",colorset());
-    console.log($("body").css("background-color"));
   }
 
   if(!$("body.notransbody").length){

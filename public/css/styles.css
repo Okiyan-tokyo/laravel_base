@@ -25,7 +25,7 @@ body.notransbody{
   font-size: 2.3em;
   min-width: 300px;
   width:80%;
-  max-width: 1000px;
+  max-width: 700px;
   min-width: 300px;
   margin-left: auto;
   margin-right: auto;
@@ -55,7 +55,7 @@ body.notransbody{
   background-color: white;
   font-size: 1.5em;
   width:80%;
-  max-width: 1000px;
+  max-width: 700px;
   min-width: 300px;
   margin-left: auto;
   margin-right: auto;
@@ -87,7 +87,7 @@ body.notransbody{
 
 .firstselectform{
   width:80%;
-  max-width: 1000px;
+  max-width: 700px;
   min-width: 300px;
   margin-left: auto;
   margin-right: auto;
@@ -101,7 +101,7 @@ body.notransbody{
   margin-left: auto;
   margin-right: auto;
   min-width: 300px;
-  max-width: 1000px;
+  max-width: 700px;
   padding-top: 7.5px;
   padding-bottom: 7.5px;
   margin-top: 30px;
@@ -275,7 +275,7 @@ select{
   position: relative;
   font-size: 1.7em;
   width:80%;
-  max-width: 800px;
+  max-width: 700px;
   min-width: 300px;
   margin-left: auto;
   margin-right: auto;
@@ -391,7 +391,7 @@ select{
 
 .user_answer_set{
   width:80%;
-  max-width: 800px;
+  max-width: 700px;
   min-width: 300px;
   margin-left: auto;
   margin-right: auto;
@@ -508,7 +508,7 @@ select{
   height:30px;
   line-height:30px;
   width:100%;
-  max-width: 800px;
+  max-width: 700px;
   margin-left: auto;
   margin-right: auto;
   border-top:black dashed 3px;

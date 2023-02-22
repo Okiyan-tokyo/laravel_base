@@ -1,8 +1,5 @@
 <x-layout>
 
-
-
-
 <x-slot name="title">{{$teamsets[0]->jpn_name}}</x-slot>
 
 <body 
@@ -105,20 +102,25 @@ id="its_game">
 
 <div class="backtopdiv">
   <p class="backtopp"><a class="backtopa" href="{{route("indexroute")}}">戻る</a>
-  <span class="dataday">＊23年2月5日現在</span>
+  <span class="dataday">＊23年2月18日現在</span>
   </p>
 </div>
 
 
 
 <script>
-  $(()=>{
-
-
-    if($("#totalbtn").length){
-      $("#totalbtn").on("click",submit_answer1)
-    }
+  
+  
+  
+  $(()=>{ 
     
+    if($("#totalbtn").length){
+       $("form").submit((e)=>{
+         e.preventDefault();
+         submit_answer1(e);
+        })
+      }
+      
     if($('#numsetbtn').length){
       $("#numsetbtn").on("click",submit_answer2)
     }
@@ -142,14 +144,11 @@ id="its_game">
         return response.json();
       }).then((json)=>{
 
-
         // コードのエラーが返された時
         if(json.isok==="error"){
           location.href=$("#toerror").data("url")+"?reason=team";
           return;
         }
-
-
         if(json.isok==="ok"){
           // 正解の場合
           // 処理する要素の番号を格納
@@ -169,7 +168,14 @@ id="its_game">
               }
             })
           });
-          
+            
+
+          // submitをできなくする
+          $("form").off("submit");
+          $("form").submit((e)=>{
+           e.preventDefault();
+          })
+            
           if(elemsets.length>0){
             right_display(elemsets);
           }else{
@@ -281,12 +287,14 @@ id="its_game">
             $("#whenright").addClass("whenrightbase");
             $("button").css({pointerEvents:"auto",opacity:1});
             $(".not_fixed").css("transform","translateY(170px)");
+            $("form").submit((e)=>{
+              e.preventDefault();
+              submit_answer1(e);
+            })
           },3000)
   
           // 全問正解していたら、お祝いの表示
-          // if(Number($(".countspan2").text())===0){
-
-          if(Number($(".countspan2").text())===32){
+          if(Number($(".countspan2").text())===0){
             setTimeout(function(){
               $("button").css({pointerEvents:"none",opacity:0.3});
               $("input").blur();
@@ -338,8 +346,12 @@ id="its_game">
   
           // 全問正解していたら、お祝いの表示
           if(Number($(".countspan2").text())===0){
-            $(".congratulation").addClass("congraadd");
-            $(".congratulation").css("display","block");
+            setTimeout(function(){
+              $("button").css({pointerEvents:"none",opacity:0.3});
+              $("input").blur();
+              $(".congratulation").addClass("congraadd");
+              $(".congratulation").css("display","block");
+            },3100)
            }
     }
 
@@ -355,6 +367,12 @@ id="its_game">
                              .addClass("existbase");
               $(".not_fixed").css("transform","translateY(170px)");
               $("button").css({pointerEvents:"auto",opacity:1});
+              if($("#totalbtn").length>0){
+                $("form").submit((e)=>{
+                e.preventDefault();
+                submit_answer1(e);
+                })
+              }
             },2000);
     }
 
@@ -370,6 +388,12 @@ id="its_game">
             .addClass("whenwrongbase");
             $(".not_fixed").css("transform","translateY(170px)");
             $("button").css({pointerEvents:"auto",opacity:1});
+            if($("#totalbtn").length>0){
+                $("form").submit((e)=>{
+                e.preventDefault();
+                submit_answer1(e);
+                })
+              }
           },2000);
     }
 
