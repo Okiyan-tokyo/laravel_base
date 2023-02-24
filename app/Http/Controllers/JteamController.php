@@ -259,7 +259,7 @@ class JteamController extends Controller
         ->get();
         
         $table2=new Teamname();
-        
+            
 
       return view("record")->with(["lists_array"=>[[$lists_full,"full"],[$lists_part,"part"],[$lists_withnum,"withnum"]]]);
     }
