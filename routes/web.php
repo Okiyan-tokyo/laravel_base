@@ -52,6 +52,10 @@ Route::post("/posts.withnum",[JteamController::class,"answer_withnum"])
 Route::get("record",[JteamController::class,"record"])
 ->name("recordroute");
 
+// 正解に1をプラスする
+Route::post("/posts.result",[JteamController::class,"result_plus"])->name("plusroute");
+
+
 // エラーページ
 Route::get("error",[JteamController::class,"whenerror"])
 ->name("errorroute");

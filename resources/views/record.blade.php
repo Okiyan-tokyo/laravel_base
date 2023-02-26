@@ -34,7 +34,7 @@
       <th class="rank_th">順位</th>
       <th class="rank_th">名前</th>
       <th class="rank_th">チーム</th>
-      <th class="rank_th">正解された回数</th>
+      <th class="rank_th">正解数</th>
     </tr>
   </thead>
 <tbody>
@@ -82,9 +82,9 @@
         </tr>
   {{-- ほか◯◯名 --}}
      @else
-            @if($rank===$serialnumber && $serialequal!==0)
+            @if($rank===$serialnumber && $serialequal!==0 && $rankforother<31)
                  <tr class="rank_tr_none" ><td class="rank_td_none"  colspan="4">{{$rankforother}}位…ほか{{$serialequal}}選手</td></tr>
-            @elseif(count($lists[0])===$serialnumber && $rank<=31 ))
+            @elseif(count($lists[0])===$serialnumber && $rankforother<31))
                 <tr class="rank_tr_none" ><td class="rank_td_none"  colspan="4">{{$rankforother}}位…ほか{{$serialequal+1}}選手</td></tr>
             @else
              <?php $serialequal++ ?>

@@ -96,26 +96,68 @@ class JteamController extends Controller
         }
     }
     
-    // 結果挿入
-    public function result_plus($list,$type){
+
+
+
+    // 結果挿入(part,full)
+    public function result_plus(){
+
+        $lists=explode(",",self::h(filter_input(INPUT_POST,"lists")));
+        $type=self::h(filter_input(INPUT_POST,"type"));
+        $team=self::h(filter_input(INPUT_POST,"team"));
+
+        // // インジェクション対策
+        // // チーム名が違っていたら処理を止める
+        if(!$this->team_isok($team)){
+            exit;
+        }
+        
+        // 渡って来た「part」の値でpartを再代入。それ以外は処理しないだけ。
+        if(strpos($type,"part")>0){
+            $type="part";
+        }else if(strpos($type,"full")>0){
+            $type="full";
+        }
+
         try{
             DB::transaction(
-                function()use(&$list,&$type){
-                        switch($type){
-                            case "full":
-                                $list->right_full++;
-                            break;
-                            case "part":
-                                $list->right_part++;
-                            break;
-                            case "withnum":
-                                $list->right_withnum++;
-                            break;
-                            default:
-                            // エラー処理
-                            // 結果を記録登録だけなので無視する
-                        break;
+                function()use(&$lists,&$type,&$team){
+    
+                    foreach($lists as $list){
+                        // 数字かどうか,インジェクション対策
+                        if(is_numeric($list)){
+                            $where_array=["num" => intval($list), "team" => $team];                            
+                            $data=Nowlists23::where($where_array)->first();
+                            switch($type){
+                                   case "full":
+                                        $data->right_full++;
+                                   break;
+                                   case "part":
+                                        $data->right_part++;
+                                   break;
+                                   default:
+                                   // エラー処理
+                                   // 結果を記録登録だけなので無視する
+                                    break;
+                           }
+                           $data->save();
+                      }
                     }
+                });
+        }catch(PDOException $e){
+            // エラー処理
+            // 結果を記録登録だけなので無視する
+        }
+        // return response()->json(['result' =>$lists]);
+        // exit;
+    }
+
+    // 結果挿入2
+    public function result_plus_withnum($list){
+        try{
+            DB::transaction(
+                function()use(&$list){
+                    $list->right_withnum++;
                     $list->save();
                 }
             );
@@ -144,7 +186,6 @@ class JteamController extends Controller
             if($lists[0]===trim($list->full)){
                     $isok="ok";
                     $numset[]=$list->num;
-                    $this->result_plus($list,"full");
             }else{
                 // 外国人選手など、名前の間に・やスペースをつけた場合（半角全角ごっちゃには未対応）
                 $arraypart=explode(",",$list->part);
@@ -154,7 +195,6 @@ class JteamController extends Controller
                 if($lists[0]===$pattern1 || $lists[0]===$pattern2 || $lists[0]===$pattern3){
                     $isok="ok";
                     $numset[]=$list->num;
-                    $this->result_plus($list,"full");
                 }
             }
         }
@@ -186,7 +226,6 @@ class JteamController extends Controller
                 if($lists[0]===$namepart){
                     $isok="ok";
                     $numset[]=$list->num;
-                    $this->result_plus($list,"part");
                     goto not_require_full;
                 }
             } 
@@ -203,7 +242,6 @@ class JteamController extends Controller
                         if($lists[0]===$pattern1 || $lists[0]===$pattern2 || $lists[0]===$pattern3){
                             $isok="ok";
                             $numset[]=$list->num;
-                            $this->result_plus($list,"part");
                         }
                 }
 
@@ -224,7 +262,7 @@ class JteamController extends Controller
             $numarray=explode(",",$lists[0]);
             foreach($numarray as $num){
              if(intval($num)===$list->num){
-                $this->result_plus($list,"withnum");
+                $this->result_plus_withnum($list);
              }
             }
         }

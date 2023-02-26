@@ -106,10 +106,9 @@ id="its_game">
   </p>
 </div>
 
-
+<span id="plus_route" data-url="{{route("plusroute")}}"></span>
 
 <script>
-  
   
   
   $(()=>{ 
@@ -126,6 +125,13 @@ id="its_game">
     }
 
     function submit_answer1(e){
+
+     // submitをできなくする
+     $("form").off("submit");
+          $("form").submit((e)=>{
+           e.preventDefault();
+      })
+
       e.preventDefault();
       fetch(
           $("form").data("url"),
@@ -153,6 +159,8 @@ id="its_game">
           // 正解の場合
           // 処理する要素の番号を格納
           let elemsets=[];
+          // 正解の背番号の取得
+          let numsets=[];
 
           // 正解した問題の背番号の取得
            json.numset.forEach(json_num => {
@@ -163,20 +171,29 @@ id="its_game">
                 // 既に正解していたら、正解リストに付け加えない
                 if($(elem).data("open")==="close"){
                   elemsets.push(i);
+                  numsets.push($(elem).data("num"));
                   $(elem).data("open", "open");
                 }
               }
             })
           });
-            
-
-          // submitをできなくする
-          $("form").off("submit");
-          $("form").submit((e)=>{
-           e.preventDefault();
-          })
-            
+                        
           if(elemsets.length>0){
+            // 正解のカウントにプラスする
+            fetch(
+              $("#plus_route").data("url"),
+              {
+                headers: {
+              'X-CSRF-TOKEN': '{{ csrf_token() }}' 
+                },
+                method:"post",
+                body:new URLSearchParams({
+                  lists:numsets.join(","),
+                  type:$("form").data("url"),
+                  team:$("form").data("team")
+                })
+              }
+            );
             right_display(elemsets);
           }else{
             // 既に回答済みの時の処理
