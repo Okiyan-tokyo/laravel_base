@@ -264,6 +264,13 @@ select{
   width:100%;
 }
 
+.display_reverse{
+  margin-top: 100px;
+  width:100%;
+  text-align: center;
+  font-size: 1.2em;
+}
+
 .not_fixed{
   position:relative;
   transform: translateY(170px);

@@ -1,5 +1,7 @@
 $(()=>{
 
+  
+
   if($("#its_game").length){
     $("body,.fixed_top,.backtopdiv").css("background-color",'rgb('+$("body").data("red")+","+$("body").data("green")+","+$("body").data("blue")+')');
     $("body").css("color",colorset());
@@ -37,6 +39,58 @@ if($(".recordh1").length){
     }
     return newcolor;
  }
+
+
+    // inputがfocusされた時、window幅によっては戻るを非表示に
+    // どんな場合も共通
+    if(screen.width<700){
+      
+      if($("input").length){
+        $("input").each((i,elem)=>{
+          $(elem).focus(()=>{
+            if($(".backtopdiv").length>0){
+              $(".backtopdiv").css("position","absolute");
+            }
+          })
+           $(elem).blur(()=>{
+            if($(".backtopdiv").length>0){
+              $(".backtopdiv").css("position","fixed");
+            }
+          })
+        })
+      }
+    }
+
+
+
+      // 画面が縦に狭く、かつ横の方が長い場合の処理場合
+      ifminiscreen();
+   
+      $(window).resize(function(){
+        ifminiscreen();
+      })
+
+
+    function ifminiscreen(){
+      if($("#its_game").length>0){
+      if(screen.height<500 && window.innerWidth>window.innerHeight+100){
+       
+        // 空白だとなぜか効かない
+          $("body#its_game.bodytrans").css({"transition-property": 'noproperty'});
+          
+          $(".display_reverse").css("display","block");
+          $(".fixed_top").css("display","none");
+          $(".not_fixed").css("display","none");
+          $(".backtopdiv").css("display","none");
+        }else{
+          $(".display_reverse").css("display","none");
+          $(".fixed_top").css("display","block");
+          $(".not_fixed").css("display","block");
+          $(".backtopdiv").css("display","block");
+        }
+    }
+  }
+
 
 
 });

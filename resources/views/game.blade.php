@@ -8,8 +8,11 @@ data-green="{{$teamsets[0]->green}}"
 data-blue="{{$teamsets[0]->blue}}"
 id="its_game">
 
-<div class="fixed_top">
+<div class="display_reverse">
+<p>画面を左右逆にしてください</p>
+</div>
 
+<div class="fixed_top">
 
 <h2 class="toph2"> {{$teamsets[0]->jpn_name}}：選手当てクイズ！</h2>
 
