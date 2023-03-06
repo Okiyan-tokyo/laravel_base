@@ -49,12 +49,13 @@ if($(".recordh1").length){
         $("input").each((i,elem)=>{
           $(elem).focus(()=>{
             if($(".backtopdiv").length>0){
-              $(".backtopdiv").css("position","absolute");
+              // $(".backtopdiv").css("position","absolute");
+              $(".backtopdiv").css("display","none");
             }
           })
            $(elem).blur(()=>{
             if($(".backtopdiv").length>0){
-              $(".backtopdiv").css("position","fixed");
+              $(".backtopdiv").css("display","block");
             }
           })
         })
