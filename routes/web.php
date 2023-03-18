@@ -24,14 +24,14 @@ Route::post('/select.team',[JteamController::class,"select_team"])->name("select
 
 
 // 選手をSQL登録
-// Route::get('/teamgo',function(){
-//     return view("now_team/list_to_sql");
-// }
-// );
+Route::get('/teamgo',function(){
+    return view("now_team/list_to_sql");
+}
+);
 
 // チーム名をSQL登録
-// Route::get('/nowteam/teamname/team_to_sql',[Nowlists23Controller::class,"teamname_to_sql"]
-// );
+Route::get('/nowteam/teamname/team_to_sql',[Nowlists23Controller::class,"teamname_to_sql"]
+);
 
 
 // フルネームが正しいか
@@ -59,3 +59,9 @@ Route::post("/posts.result",[JteamController::class,"result_plus"])->name("plusr
 // エラーページ
 Route::get("error",[JteamController::class,"whenerror"])
 ->name("errorroute");
+
+
+// 一時的なテストページ
+Route::get("testpage",function(){
+  return view("testpage");
+});

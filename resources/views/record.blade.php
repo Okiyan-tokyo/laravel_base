@@ -27,7 +27,6 @@
   @break;
 @endswitch
 
-
 <table class="rank_table">
   <thead>
     <tr class="rank_trhead">
@@ -84,7 +83,7 @@
      @else
             @if($rank===$serialnumber && $serialequal!==0 && $rankforother<31)
                  <tr class="rank_tr_none" ><td class="rank_td_none"  colspan="4">{{$rankforother}}位…ほか{{$serialequal}}選手</td></tr>
-            @elseif(count($lists[0])===$serialnumber && $rankforother<31))
+            @elseif(count($lists[0])===$serialnumber && $rankforother<31)
                 <tr class="rank_tr_none" ><td class="rank_td_none"  colspan="4">{{$rankforother}}位…ほか{{$serialequal+1}}選手</td></tr>
             @else
              <?php $serialequal++ ?>
