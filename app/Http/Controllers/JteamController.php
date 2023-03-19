@@ -64,7 +64,11 @@ class JteamController extends Controller
         return view("game")->with(["teamsets"=>Teamname::where("eng_name","=",$team)->get(),
          "type"=>$type,
          "formroute"=>$formroute,
-         "lists"=>Nowlists23::where("team","=",$team)->get()
+         "lists"=>Nowlists23::where("team","=",$team)->get(),
+         "lists_without_1000"=>Nowlists23::where([
+             ["team","=",$team],
+             ["num","<>",1000],
+         ])->get()
         ]);
     }
 

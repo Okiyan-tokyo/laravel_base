@@ -1,7 +1,5 @@
 $(()=>{
-
-  
-
+  // 色の訂正
   if($("#its_game").length){
     $("body,.fixed_top,.backtopdiv").css("background-color",'rgb('+$("body").data("red")+","+$("body").data("green")+","+$("body").data("blue")+')');
     $("body").css("color",colorset());
@@ -92,6 +90,6 @@ if($(".recordh1").length){
     }
   }
 
-
+  
 
 });

@@ -33,6 +33,10 @@ Route::get('/teamgo',function(){
 Route::get('/nowteam/teamname/team_to_sql',[Nowlists23Controller::class,"teamname_to_sql"]
 );
 
+// 修正ページ：①背番号が重なっていないか？
+Route::get("testpage",function(){
+  return view("testpage");
+});
 
 // フルネームが正しいか
 Route::post("/posts.full",[JteamController::class,"answer_full"])
@@ -61,7 +65,3 @@ Route::get("error",[JteamController::class,"whenerror"])
 ->name("errorroute");
 
 
-// 一時的なテストページ
-Route::get("testpage",function(){
-  return view("testpage");
-});

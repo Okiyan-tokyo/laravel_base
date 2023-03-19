@@ -34,7 +34,7 @@ id="its_game">
      <p class="correct_count">
       <span class="countspan1">0</span>人正解</p>
       <p class="rest_count">
-      (あと<span class="countspan2">{{count($lists_without_1000)}}</span>人)</p>      
+      (あと<span class="countspan2">{{count($lists);}}</span>人)</p>      
     </div>
   </div>
 </form>
@@ -72,30 +72,14 @@ id="its_game">
   @if($formroute==="withnumroute")
   style="width:30%;"
   @endif
-  >
-    {{-- ２種の場合 --}}
-   @if($list->num!==1000)
-    {{$list->num}}
-    @else
-    2種
-    @endif
-  </td>
+  >{{$list->num}}</td>
   @if($formroute==="withnumroute")
   <td class="tdquestion" style="width:70%;" data-open="close" data-num="{{$list->num}}" data-name="{{$list->full}}" data-part="{{$list->part}}">
-    {{-- ２種の場合 --}}
-    @if($list->num!==1000)
-    <input type="text" name="player" class="input_with_num" >
-    @else
-    {{$list->full}}
-    @endif
+  <input type="text" name="player" class="input_with_num" >
+    {{-- <button class="numsetbtn">決定！</button> --}}
   </td>
   @else
-    {{-- ２種の場合 --}}
-    @if($list->num!==1000)
-    <td class="tdquestion" data-open="close" data-num="{{$list->num}}" data-name="{{$list->full}}">？？？</td>  
-    @else
-    <td class="tdquestion" data-open="open" data-num="{{$list->num}}" data-name="{{$list->full}}">{{$list->full}}</td>  
-    @endif
+  <td class="tdquestion" data-open="close" data-num="{{$list->num}}" data-name="{{$list->full}}">？？？</td>  
   @endif
   </tr>
   @empty
@@ -127,7 +111,8 @@ id="its_game">
 <span id="plus_route" data-url="{{route("plusroute")}}"></span>
 
 <script>
-
+  
+  
   $(()=>{ 
     
     if($("#totalbtn").length){
