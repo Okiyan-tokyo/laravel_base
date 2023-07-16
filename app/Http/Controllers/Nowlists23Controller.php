@@ -6,7 +6,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Teamname;
+use App\Models\Nowlists23;
 use App\Enums\PublishStateType;
+use Illuminate\Support\Facades\DB;
 
 class Nowlists23Controller extends Controller
 {
@@ -91,6 +93,148 @@ class Nowlists23Controller extends Controller
             }
             $tnsets->save();
         }
+    }
+
+    public function player_info_from_text(){
+        // txtのファイルの取得(storage/app)
+        // ディレクトリ内のファイル一覧を取得
+        $txtfiles = glob(storage_path('app/files/team_name').'/*.txt');
+
+        // $txtfiles=glob(resource_path()."/views/now_team/team_name/*.txt");
+        
+        
+        // 正規表現
+        // $ptn_name="/[0-9]+ ([ぁ-ん]|[ァ-ヴー]|[一-龠]|　)+]/u";
+        $ptn_num="/(?:[0-9])+/u";
+        $ptn_name="/(?:[ぁ-ん]|[ァ-ヴー]|[一-龠﨑々（）]|　)+/u";
+        $teamnamelists=[];
+
+        // id番号
+        $id_n=0;
+
+     // txtファイルを開いて１行ずつ取り出す
+     foreach($txtfiles as $txt){
+        $lists=file($txt);
+        $slashpoint=mb_strpos($txt,"team_name");
+        $teamandtxt=mb_substr($txt,$slashpoint+10);
+        $team=mb_substr($teamandtxt,0,mb_strlen($teamandtxt)-4);
+
+        $n=0;   
+
+        foreach($lists as $list){
+            // 初期化
+            $fullname="";
+            $restname="";
+            $partname=[];
+            
+            // 選手データは３行に１つ
+            if($n%3===0){
+            // idはinsertされない
+            $id_n++;
+     
+            preg_match_all($ptn_num,$list,$numbase);
+            preg_match_all($ptn_name,$list,$namebase);
+
+            // スペースが初めからない時の初期設定
+            $fullname=$namebase[0][0];
+            $partname[]=$namebase[0][0];
+            $restname=$namebase[0][0];
+
+            $spacepoint=mb_strpos($namebase[0][0],"　");
+            $repeat=0;
+
+            while(!empty($spacepoint)){
+            $partname[]=mb_substr($partname[count($partname)-1],$spacepoint+1);
+            array_splice($partname,count($partname)-2,1,mb_substr($restname,0,$spacepoint));
+            $restname=mb_substr($restname,$spacepoint+1);
+            $fullname=implode("",$partname);
+            $spacepoint=mb_strpos($restname,"　");
+            }
+            // 格納(後にSQL登録or編集)
+            $teamnamelists[]=[
+                "id"=>$id_n,
+                "team"=>$team,
+                "num"=>$numbase[0][0],
+                "full"=>$fullname,
+                "part"=>implode(",",$partname),
+                'right_full' => 0,
+                'right_part' => 0,
+                'right_withnum' => 0
+            ];    
+        }
+            $n++;
+        }
+      }
+
+      return $teamnamelists;
+    }
+
+    // 新たに登録する時
+    public function create_new_player_sql(){
+        $playerlists=$this->player_info_from_text();
+
+        // まずは全件削除
+        Nowlists23::truncate(); 
+        // 挿入
+        DB::transaction(function()use($playerlists){
+           Nowlists23::insert($playerlists);
+        });
+        return view("now_team.list_to_sql");
+
+    }
+
+    public function update_player_sql(){
+        $playerlists=$this->player_info_from_text();
+        $alldata=Nowlists23::all();
+        
+        $out_information=[];
+        $in_information=[];
+        
+
+        // sqlリストにあり＝選手名鑑になし＝データ削除 
+        foreach($alldata as $data){
+          foreach($playerlists as $player){
+                // チームも登録名も背番号も同じ＝そのまま
+                // 全て同じ選手が移籍してきた時に未対応
+                if(
+                    $player["team"]===$data->team &&
+                    $player["full"]===$data->full &&
+                    $player["part"]===$data->part &&
+                    intval($player["num"])===$data->num
+                    ){
+                        // 同じペアがあればループを抜ける
+                        goto ok_1;
+                    }
+            }
+     
+            $out_information[]=$data;
+            $data->delete();    
+         ok_1:
+        }
+
+         // sqlリストになし＝選手名鑑にあり＝データ挿入
+        foreach($playerlists as $player){
+            foreach($alldata as $data){
+                if(
+                    $player["team"]===$data->team &&
+                    $player["full"]===$data->full &&
+                    $player["part"]===$data->part &&
+                    intval($player["num"])===$data->num
+                    ){
+                        // 同じペアがあればループを抜ける
+                        goto ok_2;
+                    }                      
+            }
+            
+            // 挿入
+            $in_information[]=$player;
+            // １行ずつIDをつけて挿入する方法
+            DB::table("nowlists23s")->insertGetId($player);
+            ok_2:
+        }
+
+        return view("now_team.update_playerlists")->with(["in_information"=>$in_information,"out_information"=>$out_information]);
+        
     }
 
 }

@@ -1,21 +1,43 @@
 <?php
 
-echo "処理が終了しました";
-
-// use App\Models\Nowlists23;
-
-// // /teamgo
-
-// // まずは全件削除
-// Nowlists23::truncate();
+echo nl2br("データアップロード完了しました。\n完了点は以下の通りです\n\n");
 
 
-// // トランザクション
+
+echo "OUT";
+
+echo nl2br("\n");
+
+foreach($out_information as $out){
+  echo "名前...".$out["full"];
+  echo nl2br("\n");
+  echo "チーム...".$out["team"];
+  echo nl2br("\n");
+}
 
 
-//   // DB::transaction(function(){
+echo nl2br("\n");
+echo nl2br("\n");
 
-//     // txtのファイルの取得
+echo "IN";
+echo nl2br("\n");
+
+foreach($in_information as $in){
+  echo "名前...".$in["full"];
+  echo nl2br("\n");
+  echo "チーム...".$in["team"];
+  echo nl2br("\n");
+}
+
+
+
+
+// use App\Models\Nowlists23s;
+
+// $lists=Nowlists23s::all();
+
+
+//  // txtのファイルの取得
 //   // laravelならこれ
 //   $txtfiles=glob(resource_path()."/views/now_team/team_name/*.txt");
 //   // 正規表現
@@ -67,27 +89,18 @@ echo "処理が終了しました";
 //         }
 
 
-//           $post=new Nowlists23;
-//           $post->team=$team;
-//           $post->num=$numbase[0][0];
-//           $post->full=$fullname;
-//           $post->part=implode(",",$partname);
-//           $post->right_full=0;
-//           $post->right_part=0;
-//           $post->right_withnum=0;
-//           $post->save();
+//           // $post=new Nowlists23;
+//           // $post->team=$team;
+//           // $post->num=$numbase[0][0];
+//           // $post->full=$fullname;
+//           // $post->part=implode(",",$partname);
+//           // $post->right_full=0;
+//           // $post->right_part=0;
+//           // $post->right_withnum=0;
+//           // $post->save();
     
 
 //       }
 //       $n++;
 //     }
 //   }
-
-//   // })
-
-
-// // }catch(PDOException $e){
-// //   {{$e->getMessage()}}
-// //   exit;
-// // }
-

@@ -24,10 +24,14 @@ Route::post('/select.team',[JteamController::class,"select_team"])->name("select
 
 
 // 選手をSQL登録
-Route::get('/teamgo',function(){
-    return view("now_team/list_to_sql");
-}
+// UPし終えたら消すのを忘れずに！！
+Route::get('/teamgo',[Nowlists23Controller::class,"create_new_player_sql"]
 );
+
+// 選手移籍市場に合わせてアップデート
+// 消すのを忘れずに！！
+// データをとってきて置き換えてアップロードが１番か？
+Route::get('/update_player_list',[Nowlists23Controller::class,"update_player_sql"]);
 
 // チーム名をSQL登録
 Route::get('/nowteam/teamname/team_to_sql',[Nowlists23Controller::class,"teamname_to_sql"]
@@ -58,7 +62,6 @@ Route::get("record",[JteamController::class,"record"])
 
 // 正解に1をプラスする
 Route::post("/posts.result",[JteamController::class,"result_plus"])->name("plusroute");
-
 
 // エラーページ
 Route::get("error",[JteamController::class,"whenerror"])
