@@ -98,9 +98,9 @@ class Nowlists23Controller extends Controller
     public function player_info_from_text(){
         // txtのファイルの取得(storage/app)
         // ディレクトリ内のファイル一覧を取得
-        $txtfiles = glob(storage_path('app/files/team_name').'/*.txt');
+        // $txtfiles = glob(storage_path('app/files/team_name').'/*.txt');
 
-        // $txtfiles=glob(resource_path()."/views/now_team/team_name/*.txt");
+        $txtfiles=glob(resource_path()."/views/now_team/team_name/*.txt");
         
         
         // 正規表現
@@ -171,6 +171,7 @@ class Nowlists23Controller extends Controller
 
     // 新たに登録する時
     public function create_new_player_sql(){
+        // 2種の番号なしの選手は1000番にすること！
         $playerlists=$this->player_info_from_text();
 
         // まずは全件削除
@@ -184,6 +185,7 @@ class Nowlists23Controller extends Controller
     }
 
     public function update_player_sql(){
+    // 2種の番号なしの選手は1000番にすること！
         $playerlists=$this->player_info_from_text();
         $alldata=Nowlists23::all();
         

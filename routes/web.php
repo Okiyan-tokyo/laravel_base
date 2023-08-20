@@ -25,8 +25,8 @@ Route::post('/select.team',[JteamController::class,"select_team"])->name("select
 
 // 選手をSQL登録
 // UPし終えたら消すのを忘れずに！！
-Route::get('/teamgo',[Nowlists23Controller::class,"create_new_player_sql"]
-);
+// Route::get('/teamgo',[Nowlists23Controller::class,"create_new_player_sql"]
+// );
 
 // 選手移籍市場に合わせてアップデート
 // 消すのを忘れずに！！
