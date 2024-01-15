@@ -120,7 +120,7 @@ id="its_game">
 
 <div class="backtopdiv">
   <p class="backtopp"><a class="backtopa" href="{{route("indexroute")}}">戻る</a>
-  <span class="dataday">＊23年2月18日現在</span>
+  <span class="dataday">＊23年8月19日現在</span>
   </p>
 </div>
 

@@ -23,24 +23,33 @@ Route::get('/',[JteamController::class,"index"])->name("indexroute");
 Route::post('/select.team',[JteamController::class,"select_team"])->name("selectteamroute");
 
 
-// 選手をSQL登録
-// UPし終えたら消すのを忘れずに！！
-// Route::get('/teamgo',[Nowlists23Controller::class,"create_new_player_sql"]
-// );
 
-// 選手移籍市場に合わせてアップデート
-// 消すのを忘れずに！！
-// データをとってきて置き換えてアップロードが１番か？
+
+// 以下５つ、アップ時に消すこと！
+
+// 選手をSQL登録
+Route::get('/teamgo',[Nowlists23Controller::class,"create_new_player_sql"]
+);
+
+// 選手をシーズン途中でのアップロード
 Route::get('/update_player_list',[Nowlists23Controller::class,"update_player_sql"]);
 
 // チーム名をSQL登録
 Route::get('/nowteam/teamname/team_to_sql',[Nowlists23Controller::class,"teamname_to_sql"]
 );
 
-// 修正ページ：①背番号が重なっていないか？
+// 背番号が重なっていないか？
 Route::get("testpage",function(){
   return view("testpage");
 });
+
+// 年度の変更
+Route::get("yearChange",[Nowlists23Controller::class,""])
+->name("year_change_route");
+
+
+
+
 
 // フルネームが正しいか
 Route::post("/posts.full",[JteamController::class,"answer_full"])

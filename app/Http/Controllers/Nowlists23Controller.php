@@ -184,6 +184,7 @@ class Nowlists23Controller extends Controller
 
     }
 
+    // シーズン
     public function update_player_sql(){
     // 2種の番号なしの選手は1000番にすること！
         $playerlists=$this->player_info_from_text();
@@ -230,7 +231,10 @@ class Nowlists23Controller extends Controller
             
             // 挿入
             $in_information[]=$player;
+  
             // １行ずつIDをつけて挿入する方法
+            // idが重なる対策に、10000人以上登録はいないと言う前提だが・・・
+            $player["id"]=$player["id"]+10000;
             DB::table("nowlists23s")->insertGetId($player);
             ok_2:
         }
