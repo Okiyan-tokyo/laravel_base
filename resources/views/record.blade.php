@@ -61,7 +61,7 @@
   @break;
   @endswitch
     
-  {{-- 順位が指定以下の場合 --}}
+  {{-- 順位が指定以上の場合 --}}
     @if($serialnumber<=30)
       <tr class="rank_tr" style="background-color:rgb({{$p->r}},{{$p->g}},{{$p->b}})" data-r="{{$p->r}}" data-b="{{$p->b}}" data-g="{{$p->g}}">
           <td class="rank_td">{{ $rank }}</td>
@@ -109,6 +109,11 @@
 
 @endforeach
 
+</div>
+
+<div class="goarchivediv">
+  <p class="goarchivep"><a class="goarchivea" href="{{route("archiveroute")}}">過去年の記録</a>
+  </p>
 </div>
 
 <div class="backtopdiv2">

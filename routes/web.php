@@ -80,6 +80,10 @@ Route::post("/posts.withnum",[JteamController::class,"answer_withnum"])
 Route::get("record",[JteamController::class,"record"])
 ->name("recordroute");
 
+// 過去の成績表
+Route::get("archive",[JteamController::class,"archive"])
+->name("archiveroute");
+
 // 正解に1をプラスする
 Route::post("/posts.result",[JteamController::class,"result_plus"])->name("plusroute");
 

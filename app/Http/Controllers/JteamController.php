@@ -272,38 +272,53 @@ class JteamController extends Controller
         }
     }
 
-    // 選手が答えられた順番
-    public function record(){
-        $table=new Nowlists23();
+    // 選手が答えられた回数の順位
+    public function record($table="nowlists23s", $season=""){
 
         // フルネーム
-        $lists_full=DB::table("nowlists23s as n")
+        $lists_full=DB::table($table." as n")
         ->select("n.full as full","n.right_full as right_full", "t.jpn_name as team","t.red as r", "t.blue as b","t.green as g")
         ->join("teamnames as t","n.team","=","t.eng_name")
         ->orderBy("right_full","desc")
-        ->where("right_full",">",0)
-        ->get();
+        ->where("right_full",">",0);
+        if($table!=="nowlists23s"){
+          $lists_full->where("season","=",$season);            
+        }
+        $lists_full=$lists_full->get();
 
         // 名前の一部
-        $lists_part=DB::table("nowlists23s as n")
+        $lists_part=DB::table($table." as n")
         ->select("n.full as full","n.right_part as right_part", "t.jpn_name as team","t.red as r", "t.blue as b","t.green as g")
         ->join("teamnames as t","n.team","=","t.eng_name")
         ->orderBy("right_part","desc")
-        ->where("right_part",">",0)
-        ->get();
+        ->where("right_part",">",0);
+        if($table!=="nowlists23s"){
+            $lists_part->where("season","=",$season);            
+        }
+        $lists_part=$lists_part->get();
 
         // 背番号とセット
-        $lists_withnum=DB::table("nowlists23s as n")
+        $lists_withnum=DB::table($table." as n")
         ->select("n.full as full", "t.jpn_name as team", "n.right_withnum as right_withnum","t.red as r", "t.blue as b","t.green as g")
         ->join("teamnames as t","n.team","=","t.eng_name")
         ->orderBy("right_withnum","desc")
-        ->where("right_withnum",">",0)
-        ->get();
-        
-        $table2=new Teamname();
-            
+        ->where("right_withnum",">",0);
+        if($table!=="nowlists23s"){
+            $lists_withnum->where("season","=",$season);            
+        }
+        $lists_withnum=$lists_withnum->get();
 
       return view("record")->with(["lists_array"=>[[$lists_full,"full"],[$lists_part,"part"],[$lists_withnum,"withnum"]]]);
+    }
+
+    // 過去の成績表(年度選択ページ)
+    public function archive(){
+        return $this->record($table="archives",$season=2023);
+    }
+
+    // 過去の成績表（実際に表示するページ）
+    public function view_archive(){
+
     }
 
 

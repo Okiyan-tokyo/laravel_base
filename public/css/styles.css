@@ -522,18 +522,25 @@ select{
   justify-content: center;
 }
 
-.backtopdiv2{
+.backtopdiv2,.goarchivediv{
   text-align: center;
   position: fixed;
   height:30px;
   line-height:30px;
   width:100%;
   /* left:10%; */
-  bottom:20px;
   z-index:30;
 }
 
-.backtopp2{
+.backtopdiv2{
+  bottom:20px;
+}
+
+.goarchivediv{
+  bottom:65px;
+}
+
+.backtopp2,.goarchivep{
   margin-top: 0px;
   margin-bottom: 0px;
   height:30px;

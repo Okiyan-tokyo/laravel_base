@@ -13,12 +13,22 @@
         @case("type")
           {{"ゲームタイプが不正です"}}    
         @break
+        @case("exist")
+          {{"既に過去データが存在しています"}}    
+        @break
+        @case("team_update")
+          {{"チーム登録時のエラーです"}}    
+        @break
+        @case("player_update")
+          {{"プレイヤー登録時のエラーです"}}    
+        @break
         @default
+        {{$ptn}}
            {{"不明"}} 
       @endswitch
     @endempty  
   </span>
 </p>
-  <p style="text-align: center"><a href="{{route("indexroute")}}">戻る</a></p>
+  <p style="text-align: center"><a href="{{route("indexroute")}}">トップに戻る</a></p>
   </x-layout>
   
