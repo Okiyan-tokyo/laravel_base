@@ -7,6 +7,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Teamname;
 use App\Models\Nowlists23;
+use App\Models\Archive;
 use App\Enums\PublishStateType;
 use Illuminate\Support\Facades\DB;
 
@@ -184,7 +185,7 @@ class Nowlists23Controller extends Controller
 
     }
 
-    // シーズン
+    // シーズン途中でのアップロード
     public function update_player_sql(){
     // 2種の番号なしの選手は1000番にすること！
         $playerlists=$this->player_info_from_text();
@@ -243,4 +244,77 @@ class Nowlists23Controller extends Controller
         
     }
 
+    // 年度の変更
+    public function year_change(Request $request){ 
+
+        // old_year_nameのバリデーションの年度取得
+        $pastYear=date("Y",time())-1;
+        $thisYear=date("Y",time());
+        $regex=$pastYear."|".$thisYear."|".$pastYear."_".$thisYear."|no_store";
+
+
+        //  バリデーション
+        $request->validate([
+            "old_year_name" => [
+                // regexの内部の|が、requiredとregexの区切りと重なるので、requiredとregexの区切りは配列で行う必要がある
+                "required",
+                "regex:/^(".$regex.")$/u"
+            ],
+            "pass"=>"required|regex:/^(".env("YEAR_CHANGE_PASS").")$/"
+        ],[
+            "old_year_name.required"=>"前年度が入力されていません",
+            "old_year_name.regex"=>"前年度の値が不正です",
+            "pass.required"=>"パスワードが入力されていません",
+            "pass.regex"=>"パスワードの値が不正です",
+        ]);
+        
+        // どの年度のデータを保存するか？
+        $old_year_name=$request->old_year_name;
+
+
+        DB::transaction(function()use($old_year_name){
+            try{
+            // 既に過去データが登録後ではないか？
+            if(count(Archive::where("season","=",$old_year_name)->get())>0){
+                throw new \PDOException("既に変更済みです");
+            }
+
+            // 過去データの登録
+            $year_result=Nowlists23::all();
+            foreach($year_result as $yr){
+                // １度でも回答された選手のみ登録
+                if($yr->right_part>0 || $yr->right_full || $yr->right_withnum>0){
+                    $archive=new Archive();
+                    
+                    // 共通カラムをコピー(ダイレクトにコピーするとモデル自体がコピーされるので、１つずつ行う)
+                    $commons=["num","team","full","part","right_part","right_full","right_withnum"];
+                    foreach($commons as $c){
+                        $archive->$c=$yr->$c;
+                    }                
+
+                    // どのシーズンかを登録
+                    $archive["season"]=$old_year_name;
+                    $archive->save();
+                }
+              }
+            }catch(\Throwable $e){
+                dd($e->getMessage());
+                return redirect()->route("errorroute",[
+                    "reason"=>$e.getMessage()
+                ]);
+            }
+            // 新データの変更
+            // ここでトランザクションが内部にあり
+            // $this->create_new_player_sql();
+            return view("config/sign")->with([
+                "message"=>"旧年をアーカイブ登録し\n新年度を登録しました！"
+            ]);
+
+
+        });
+        
+    }
+
+
+    
 }

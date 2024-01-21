@@ -307,6 +307,7 @@ class JteamController extends Controller
     }
 
 
+    // エラー表示
     public function whenerror(Request $request){
         $ptn=$request->query("reason");
         return view("error")->with(["ptn"=>$ptn]);

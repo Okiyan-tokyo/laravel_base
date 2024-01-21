@@ -563,6 +563,66 @@ select{
   text-align: center;
 }
 
+/* configページ */
+body#year_change_body{
+  opacity:1;
+  transition:"";
+}
+
+#seasonChangeH3{
+  text-align: center;
+  text-decoration: underline;
+  margin-bottom: 20px;
+}
+
+#year_change_form{
+  margin-left: auto;
+  margin-right: auto;
+  width:80%;
+  max-width: 770px;
+  min-width: 300px;
+  border: black solid 3px;
+  border-radius: 10px;
+}
+
+.seazonChange_confirm_div{
+  margin-left: auto;
+  margin-right: auto;
+  width:60%;
+  max-width: 700px;
+  min-width: 200px;
+  text-align: left;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.seazonChange_confirm_div>p,
+.season_change_lavel{
+  font-size: 1.1em;
+}
+
+#year_change_btn_div{
+  text-align: center;
+  margin-top: 15px;
+  margin-bottom: 10px;
+}
+
+/* configのサイン */
+#config_completed_sign,#config_to_index{
+  margin-left: auto;
+  margin-right: auto;
+  width:60%;
+  max-width: 700px;
+  min-width: 200px;
+  text-align: center;
+}
+
+#config_completed_sign{
+  font-size: 1.2em;
+}
+
+
+
 /* レスポンシブ */
 
 @media screen and (max-width:650px){

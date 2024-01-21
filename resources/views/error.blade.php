@@ -14,7 +14,7 @@
           {{"ゲームタイプが不正です"}}    
         @break
         @default
-          {{"不明"}} 
+           {{"不明"}} 
       @endswitch
     @endempty  
   </span>

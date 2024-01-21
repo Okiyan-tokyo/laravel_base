@@ -23,7 +23,8 @@
 <script src="https://code.jquery.com/jquery-3.6.3.min.js"
 integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU="
 crossorigin="anonymous"></script>
-<script differ src="{{ url("js/game.js")}}"></script>
+
+<script defer src="{{ url(!isset($js) ? "js/game.js" : "js/".$js.".js")}}"></script>
 
 {{$slot}}
 

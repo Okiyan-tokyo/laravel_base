@@ -25,7 +25,7 @@ Route::post('/select.team',[JteamController::class,"select_team"])->name("select
 
 
 
-// 以下５つ、アップ時に消すこと！
+// 以下６つ、アップ時に消すこと！
 
 // 選手をSQL登録
 Route::get('/teamgo',[Nowlists23Controller::class,"create_new_player_sql"]
@@ -43,9 +43,20 @@ Route::get("testpage",function(){
   return view("testpage");
 });
 
-// 年度の変更
-Route::get("yearChange",[Nowlists23Controller::class,""])
+// 年度の変更(確認)
+Route::get("year_change_confirm",
+  function(){
+    return view("config/year_change_confirm")->with([
+      "pastYear"=>date("Y",time())-1,
+      "thisYear"=>date("Y",time())
+    ]);
+  }
+);
+
+// 年度の変更(本番)
+Route::patch("year_change",[Nowlists23Controller::class,"year_change"])
 ->name("year_change_route");
+
 
 
 
