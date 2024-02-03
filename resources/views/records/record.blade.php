@@ -7,6 +7,19 @@
 
 <div class="recordtablepoint" >
 
+{{-- 30位以下へのバリデーションエラー --}}
+{{-- 個々のランクの下に置くと全てにエラー表示が出るため、ここで定義 --}}
+@if(!$isOver30 && ($errors->has("rank_kind") || $errors->has("season")))
+  @foreach(["rank_kind","season"] as $field)
+    @foreach($errors->get($field) as $message)
+    <div class="select_when_error_row1">
+      <p class="errormessage">{{$message}}</p>
+    </div>
+    @endforeach
+  @endforeach
+@endif
+
+
 @foreach($lists_array as $lists)
 <?php 
 // 順位、通しナンバー、他何人のフラグ
@@ -61,8 +74,9 @@
   @break;
   @endswitch
     
+  {{-- over30ではない場合 --}}
   {{-- 順位が指定以上の場合 --}}
-    @if($serialnumber<=30)
+  @if($isOver30 || !$isOver30 && $serialnumber<=30)
       <tr class="rank_tr" style="background-color:rgb({{$p->r}},{{$p->g}},{{$p->b}})" data-r="{{$p->r}}" data-b="{{$p->b}}" data-g="{{$p->g}}">
           <td class="rank_td">{{ $rank }}</td>
           <td class="rank_td">{{ $p->full }}</td>
@@ -88,7 +102,7 @@
             @else
              <?php $serialequal++ ?>
             @endif
-     @endif
+   @endif
    {{-- シリアルNo.を足す --}}
      @switch($lists[1])
      @case("part")
@@ -107,18 +121,32 @@
 </tbody>
 </table>
 
+{{-- 30位以下へのリンク --}}
+@if(!$isOver30)
+  <div class="over_rank30_div">
+    <p class="over_rank30_p">30位以下は<a class="over_rank30_a" href="{{route("over_30_route",
+    [
+      "season"=>$season,"rank_kind"=>$lists[1]
+    ])
+    }}">こちら</a></p>
+  </div>
+@endif
+
+
 @endforeach
 
 </div>
 
 <div class="goarchivediv">
-  <p class="goarchivep"><a class="goarchivea" href="{{route("archiveroute")}}">過去年の記録</a>
-  </p>
+  @if($season!=="all")
+  <p class="goarchivep"><a class="goarchivea" href="{{route("recordroute")}}">現在の記録</a></p>
+  @else
+  <p class="goarchivep"><a class="goarchivea" href="{{route("archiveroute")}}">過去年の記録</a></p>
+  @endif
 </div>
 
 <div class="backtopdiv2">
-  <p class="backtopp2"><a class="backtopa" href="{{route("indexroute")}}">戻る</a>
-  </p>
+  <p class="backtopp2"><a class="backtopa" href="{{route("indexroute")}}">戻る</a></p>
 </div>
 
 </x-layout> 

@@ -34,7 +34,7 @@ body.notransbody{
   margin-top: 40px;
 }
 
-.recordh1{
+.recordh1,.recordh2{
   background-color: white;
   text-align: center;
   font-size: 1.2em;
@@ -50,21 +50,44 @@ body.notransbody{
   border:black solid 3px;
 }
 
-.toph3{
+.recordh1{
+  font-size: 1.2em;
+  height:45px;
+  line-height:45px;
+}
+
+.recordh2{
+  font-size: 1.1em;
+  height:40px;
+  line-height:40px;
+}
+
+.toph3,.toph4{
   background-color: white;
-  font-size: 1.5em;
   width:80%;
   max-width: 700px;
   min-width: 300px;
   margin-left: auto;
   margin-right: auto;
   text-align: center;
+  border-top:black dashed 3px;
+  border-bottom:black dashed 3px;
+}
+
+.toph3{
+  font-size: 1.5em;
   margin-top: 20px;
   margin-bottom: 20px;
   padding-top: 20px;
   padding-bottom: 20px;
-  border-top:black dashed 3px;
-  border-bottom:black dashed 3px;
+}
+
+.toph4{
+  font-size: 1.1em;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  padding-top: 10px;
+  padding-bottom: 10px;
 }
 
 .recordh3{
@@ -82,6 +105,34 @@ body.notransbody{
   border-right:black solid 3px;
   border-left:black solid 3px;
   box-sizing: border-box;
+}
+
+#record_year_choice_form{
+  width:80%;
+  max-width: 700px;
+  min-width: 300px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 10px;
+  box-sizing: border-box;
+  border:black solid 3px;
+  border-radius: 15px;
+}
+
+
+#record_year_select{
+  display: block;
+  width:80%;
+  max-width: 700px;
+  min-width: 300px;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+  margin-top: 30px;
+  margin-bottom: 0px;
+  height:40px;
+  line-height: 40px;
+  font-size: 1.1em;
 }
 
 .firstselectform{
@@ -119,6 +170,22 @@ body.notransbody{
 
 .select_when_error2{
   animation-name: whenerror_select2;
+  animation-duration: 2s;
+  animation-fill-mode: forwards;
+}
+
+/* 結果表示年度選択など、１行のみのエラーメッセージ */
+.select_when_error_row1{
+  width:60%;
+  min-width: 280px;
+  max-width:700px;
+  margin-left: auto;
+  margin-right: auto;
+  background-color: white;
+  font-size: 1em;
+  font-weight: bold;
+  text-align: center;
+  animation-name: whenerror_select5;
   animation-duration: 2s;
   animation-fill-mode: forwards;
 }
@@ -193,16 +260,18 @@ select{
 
 
 
-
-
 @keyframes whenerror{
   99.9%{
     height:20px;
     opacity:1;
+    margin-top: 1px;
+    margin-bottom: 5px;
   }
   100%{
     height:0;
     opacity:0;
+    margin-top: 0px;
+    margin-bottom: 0px;
   }
 }
 
@@ -251,6 +320,25 @@ select{
   }
   100%{
     height:85px;
+  }
+}
+
+@keyframes whenerror_select5{
+  0%{
+    height:20px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
+  99.9%{
+    height:20px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
+  100%{
+    height:0px;
+    line-height: 0px;
+    margin-top: 0px;
+    margin-bottom: 0px;
   }
 }
 
@@ -377,13 +465,41 @@ select{
 
 
 .recordtablepoint{
-  margin-bottom: 70px;
+  margin-bottom: 110px;
 }
 
 
 .rank_table>thead{
   background-color: white;
 }
+
+
+/* 記録の30位以下 */
+.over_rank30_div{
+  width:80%;
+  max-width: 700px;
+  min-width: 280px;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+  border:black solid 3px;
+  margin-top: 3px;
+  background-color: blanchedalmond;
+  height:30px;
+  line-height: 30px;
+}
+
+.over_rank30_p{
+  text-align: center;
+  margin-top: 0;
+  margin-bottom: 0;
+  height:30px;
+  line-height:30px;
+}
+
+
+
+
 
 .answer{
   display:none;
@@ -614,6 +730,17 @@ body#year_change_body{
   margin-bottom: 10px;
 }
 
+#record_year_btn_div{
+  text-align: center;
+  margin-top: 25px;
+  margin-bottom: 20px;
+}
+
+#record_year_btn{
+  font-size: 1em;
+}
+
+
 /* configのサイン */
 #config_completed_sign,#config_to_index{
   margin-left: auto;
@@ -643,6 +770,9 @@ body#year_change_body{
   }
   .toph3{
     font-size:1.25em;
+  }
+  .toph4{
+    font-size:1em;
   }
   #user_answer{
     width:100px;

@@ -80,9 +80,17 @@ Route::post("/posts.withnum",[JteamController::class,"answer_withnum"])
 Route::get("record",[JteamController::class,"record"])
 ->name("recordroute");
 
-// 過去の成績表
-Route::get("archive",[JteamController::class,"archive"])
+// 30位以下を表示
+Route::get("record/all/{season}/{rank_kind}",[JteamController::class,"over30view"])
+->name("over_30_route");
+
+// 過去の成績表の年度選択
+Route::get("archive_year_choice",[JteamController::class,"archive"])
 ->name("archiveroute");
+
+// 過去の成績表
+Route::post("archive",[JteamController::class,"view_archive"])
+->name("archive_decide_route");
 
 // 正解に1をプラスする
 Route::post("/posts.result",[JteamController::class,"result_plus"])->name("plusroute");

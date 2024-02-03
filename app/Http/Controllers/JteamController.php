@@ -4,9 +4,12 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Models\Nowlists23;
+use App\Models\Archive;
 use Nowlists23Controller;
 use App\Models\Teamname;
 use App\Enums\PublishStateType;
+use App\Http\Requests\ResultSelectChoice;
+use App\Http\Requests\Over30Request;
 use Illuminate\Http\JsonResponse;
 
 class JteamController extends Controller
@@ -273,8 +276,8 @@ class JteamController extends Controller
     }
 
     // 選手が答えられた回数の順位
-    public function record($table="nowlists23s", $season=""){
-
+    public function record($table="nowlists23s", $season="all"){
+        
         // フルネーム
         $lists_full=DB::table($table." as n")
         ->select("n.full as full","n.right_full as right_full", "t.jpn_name as team","t.red as r", "t.blue as b","t.green as g")
@@ -308,19 +311,61 @@ class JteamController extends Controller
         }
         $lists_withnum=$lists_withnum->get();
 
-      return view("record")->with(["lists_array"=>[[$lists_full,"full"],[$lists_part,"part"],[$lists_withnum,"withnum"]]]);
+      return view("records/record")->with([
+          "lists_array"=>[[$lists_full,"full"],[$lists_part,"part"],[$lists_withnum,"withnum"]],
+          "season"=>$season,
+          "isOver30"=>false
+      ]);
     }
 
     // 過去の成績表(年度選択ページ)
     public function archive(){
-        return $this->record($table="archives",$season=2023);
+        // 年度選択
+        $seasons=Archive::groupBy("season")->pluck("season")->toArray();
+        // ビューの表示
+        return view("records/choice")->with(["seasons"=>$seasons]);
     }
-
+    
     // 過去の成績表（実際に表示するページ）
-    public function view_archive(){
+    public function view_archive(ResultSelectChoice $request){
+        
+        // 年度取得
+        $choiced_season=$request->record_year_select;
 
+        // ページ表示
+        return $this->record($table="archives",$season=$choiced_season);
     }
 
+
+    // 30位以下を表示
+    public function over30view(Over30Request $request){
+
+        // seasonとrank_kindを取得
+        $season=$request->season;
+        $rank_kind=$request->rank_kind;
+        $column="right_".$rank_kind;
+        $table= $season==="all" ? "nowlists23s" : "archives";
+
+        // 該当するsqlを表示
+        $lists=DB::table($table." as n")
+        ->select("n.full as full","n.".$column." as ".$column,"t.jpn_name as team","t.red as r", "t.blue as b","t.green as g")
+        ->join("teamnames as t","n.team","=","t.eng_name")
+        ->orderBy($column,"desc")
+        ->where($column,">",0);
+        if($table!=="nowlists23s"){
+         $lists->where("season","=",$season);            
+        }
+        $lists=$lists->get();
+
+        // ビュー
+        return view("records/record")->with([
+            // results全種類は3列の配列なので、2重配列のような形式で返す
+            "lists_array"=>[[$lists,$rank_kind]],
+            "season"=>$season,
+            "isOver30"=>true
+        ]);
+
+    }
 
     // エラー表示
     public function whenerror(Request $request){

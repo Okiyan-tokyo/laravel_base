@@ -44,7 +44,9 @@
     <p>パスワードを入力してください</p>
     <input name="pass" type="text" id="passInput">
     @error("pass")
-    <p class="errormessage">{{$message}}</p>
+    <div class=".select_when_error5">
+     <p class="errormessage">{{$message}}</p>
+    </div>
     @enderror
    </div>
 
