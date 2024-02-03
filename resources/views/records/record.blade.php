@@ -3,7 +3,8 @@
 
 <body class="body_not_trans" style="background: url({{url("img/img2.jpg")}});background-size:contain;">
 
-<h1 class="recordh1">回答された選手ランキング</h1>
+
+<h1 class="recordh1">{{ $season==="all" ? "回答された選手ランキング" : "回答された選手(".$season."年)" }}</h1>
 
 <div class="recordtablepoint" >
 

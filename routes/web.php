@@ -27,35 +27,35 @@ Route::post('/select.team',[JteamController::class,"select_team"])->name("select
 
 // 以下６つ、アップ時に消すこと！
 
-// 選手をSQL登録
-Route::get('/teamgo',[Nowlists23Controller::class,"create_new_player_sql"]
-);
+// // 選手をSQL登録
+// Route::get('/teamgo',[Nowlists23Controller::class,"create_new_player_sql"]
+// );
 
-// 選手をシーズン途中でのアップロード
-Route::get('/update_player_list',[Nowlists23Controller::class,"update_player_sql"]);
+// // 選手をシーズン途中でのアップロード
+// Route::get('/update_player_list',[Nowlists23Controller::class,"update_player_sql"]);
 
-// チーム名をSQL登録
-Route::get('/nowteam/teamname/team_to_sql',[Nowlists23Controller::class,"teamname_to_sql"]
-);
+// // チーム名をSQL登録(これは選手をsql登録と一緒にやろう。つまり単独では必要ない。むしろ単独ではエラーになる)
+// Route::get('/nowteam/teamname/team_to_sql',[Nowlists23Controller::class,"teamname_to_sql"]
+// );
 
-// 背番号が重なっていないか？
-Route::get("testpage",function(){
-  return view("testpage");
-});
+// // 背番号が重なっていないか？
+// Route::get("testpage",function(){
+//   return view("testpage");
+// });
 
-// 年度の変更(確認)
-Route::get("year_change_confirm",
-  function(){
-    return view("config/year_change_confirm")->with([
-      "pastYear"=>date("Y",time())-1,
-      "thisYear"=>date("Y",time())
-    ]);
-  }
-);
+// // 年度の変更(確認)
+// Route::get("year_change_confirm",
+//   function(){
+//     return view("config/year_change_confirm")->with([
+//       "pastYear"=>date("Y",time())-1,
+//       "thisYear"=>date("Y",time())
+//     ]);
+//   }
+// );
 
-// 年度の変更(本番)
-Route::patch("year_change",[Nowlists23Controller::class,"year_change"])
-->name("year_change_route");
+// // 年度の変更(本番)
+// Route::patch("year_change",[Nowlists23Controller::class,"year_change"])
+// ->name("year_change_route");
 
 
 

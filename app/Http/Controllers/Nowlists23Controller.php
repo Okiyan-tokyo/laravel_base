@@ -20,18 +20,21 @@ class Nowlists23Controller extends Controller
         // トランザクションの成否
         $transactionMessage="";
         DB::transaction(function()use(&$transactionMessage){
-          try{
-            $lists=[
+            try{
+                $lists=[
+                // J1
                 ["sapporo","札幌","J1", 215, 0,15],       
                 ["kashima","鹿島","J1",183 ,24,64],       
                 ["urawa","浦和","J1",231,0,43],      
                 ["kashiwa","柏","J1",255,241,0],
                 ["fc_tokyo","FC東京","J1",33,65,152],
+                ["tokyo_v","東京V","J1",3,118,75],
+                ["machida","町田","J1",0,35,106],
                 ["kawasaki","川崎","J1",53,160,217],
                 ["yokohama_fm","横浜FM","J1",0,57,137],
-                ["yokohama_fc","横浜FC","J2",0,160,228],
                 ["shonan","湘南","J1",103,180,100],
                 ["niigata","新潟","J1",255,102,0],
+                ["iwata","磐田","J1",110,157,211],
                 ["nagoya","名古屋","J1",218,54,27],
                 ["kyoto","京都","J1",116,0,107],
                 ["g_osaka","G大阪","J1",9,63,166],
@@ -40,6 +43,8 @@ class Nowlists23Controller extends Controller
                 ["hiroshima","広島","J1",80,49,143],
                 ["fukuoka","福岡","J1",0,64,127],
                 ["tosu","鳥栖","J1",0,150,210],
+
+                // J2
                 ["sendai","仙台","J2",252,204,0],
                 ["akita","秋田","J2",0,91,171],
                 ["yamagata","山形","J2",15,34,139],
@@ -47,40 +52,40 @@ class Nowlists23Controller extends Controller
                 ["mito","水戸","J2",29,31,144],
                 ["tochigi","栃木","J2",245,241,12],
                 ["gunma","群馬","J2",1,62,116],
-                ["omiya","大宮","J3",245,105,0],
+                ["yokohama_fc","横浜FC","J2",0,160,228],
                 ["chiba","千葉","J2",254,225,0],
-                ["tokyo_v","東京V","J1",3,118,75],
-                ["machida","町田","J1",0,35,106],
                 ["kofu","甲府","J2",0,91,172],
-                ["kanazawa","金沢","J3",229,0,9],
                 ["shimizu","清水","J2",250,165,40],
-                ["iwata","磐田","J1",110,157,211],
                 ["fujieda","藤枝","J2",134,52,124],
                 ["okayama","岡山","J2",181,1,62],
                 ["yamaguchi","山口","J2",235,94,2],
+                ["ehime","愛媛","J2",255,102,0],
                 ["tokushima","徳島","J2",17,17,131],
                 ["nagasaki","長崎","J2",243,152,0],
                 ["kumamoto","熊本","J2",186,26,20],
                 ["oita","大分","J2",20,11,140],
+                ["kagoshima","鹿児島","J2",22,51,95],
+                
+                // J3
                 ["hachinoe","八戸","J3",20,168,59],
                 ["iwate","岩手","J3",255,255,255],
                 ["fukushima","福島","J3",230,0,18],
+                ["omiya","大宮","J3",245,105,0],
                 ["ys_yokohama","YS横浜","J3",91,211,229],
                 ["sagamihara","相模原","J3",39,142,66],
                 ["matsumoto","松本","J3",2,61,29],
-                ["toyama","富山","J3",17,25,135],
                 ["nagano","長野","J3",235,97,0],
+                ["toyama","富山","J3",17,25,135],
+                ["kanazawa","金沢","J3",229,0,9],
                 ["numazu","沼津","J3",0,30,179],
                 ["gifu","岐阜","J3",0,64,23],
                 ["fc_osaka","FC大阪","J3",126,201,240],
                 ["nara","奈良","J3",1,29,100],
                 ["tottori","鳥取","J3",144,238,144],
                 ["sanuki","讃岐","J3",101,170,221],
-                ["ehime","愛媛","J2",255,102,0],
                 ["imabari","今治","J3",23,98,97],
                 ["kitakyushu","北九州","J3",255,241,0],
                 ["miyazaki","宮崎","J3",255,255,255],
-                ["kagoshima","鹿児島","J2",22,51,95],
                 ["ryukyu","琉球","J3",152,7,71],
             ]; 
             foreach($lists as $list){
@@ -100,19 +105,19 @@ class Nowlists23Controller extends Controller
                 $tnsets->save();
              }
             }catch(\Throwable $e){
-                // $transactionMessage=$e->getMessage();
                 $transactionMessage="teamdata_update";
             }
         });
+        // エラーの場合、元のルートにエラーですよの表示を返す
         return $transactionMessage;
     }
 
     public function player_info_from_text(){
         // txtのファイルの取得(storage/app)
         // ディレクトリ内のファイル一覧を取得
-        // $txtfiles = glob(storage_path('app/files/team_name').'/*.txt');
+        $txtfiles = glob(storage_path('app/files/team_name').'/*.txt');
 
-        $txtfiles=glob(resource_path()."/views/now_team/team_name/*.txt");
+        // $txtfiles=glob(resource_path()."/views/now_team/team_name/*.txt");
         
         
         // 正規表現
@@ -133,6 +138,7 @@ class Nowlists23Controller extends Controller
 
         $n=0;   
 
+
         foreach($lists as $list){
             // 初期化
             $fullname="";
@@ -146,6 +152,7 @@ class Nowlists23Controller extends Controller
      
             preg_match_all($ptn_num,$list,$numbase);
             preg_match_all($ptn_name,$list,$namebase);
+            
 
             // スペースが初めからない時の初期設定
             $fullname=$namebase[0][0];
@@ -164,8 +171,10 @@ class Nowlists23Controller extends Controller
             }
             // 格納(後にSQL登録or編集)
             $teamnamelists[]=[
+                // 複数挿入できるinsertメソッドを使う場合、idとcreated atは手動挿入が必要
                 "id"=>$id_n,
-                // "created_at"=>date("Y-m-d",time()),
+                "created_at" => date("Y-m-d H:i:s", time()),
+                "updated_at" => date("Y-m-d H:i:s", time()), 
                 "team"=>$team,
                 "num"=>$numbase[0][0],
                 "full"=>$fullname,
@@ -199,9 +208,14 @@ class Nowlists23Controller extends Controller
             $transactionMessage="player_update";
          }
         });
-        return $transactionMessage;
-        // 以下は本当に初回の時のみ
+
+        // 初回のみ
         // return view("now_team.list_to_sql");
+
+        // ２回目からはこれ。これをyear_changeに返す
+        if(!empty($transactionMessage)){
+           return $transactionMessage;
+        }
     }
 
     // シーズン途中でのアップロード

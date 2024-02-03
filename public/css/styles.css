@@ -66,7 +66,7 @@ body.notransbody{
   background-color: white;
   width:80%;
   max-width: 700px;
-  min-width: 300px;
+  min-width: 280px;
   margin-left: auto;
   margin-right: auto;
   text-align: center;
@@ -124,7 +124,7 @@ body.notransbody{
   display: block;
   width:80%;
   max-width: 700px;
-  min-width: 300px;
+  min-width: 280px;
   margin-left: auto;
   margin-right: auto;
   text-align: center;
@@ -675,7 +675,7 @@ select{
   width:20%;
   min-width: 130px;
   display: inline-block;
-  font-size: 0.9em;
+  font-size: 0.8em;
   font-weight: bold;
 }
 
@@ -837,6 +837,9 @@ body#year_change_body{
   }
   .teamselectdiv,.typeselectdiv{
     min-width: 210px;
+  }
+  #record_year_choice_form{
+    padding:10px 0;
   }
 }
 @media screen and (max-width:405px){
