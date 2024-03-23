@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\JteamController;
 use App\Http\Controllers\Nowlists23Controller;
+use App\Http\Controllers\IrregularRegisterController;
 
 
 /*
@@ -28,15 +29,16 @@ Route::post('/select.team',[JteamController::class,"select_team"])->name("select
 // 以下６つ、アップ時に消すこと！
 
 // // 選手をSQL登録
-Route::get('/teamgo',[Nowlists23Controller::class,"create_new_player_sql"]
-);
+// これは年度変更で行えるようになった
+// Route::get('/teamgo',[Nowlists23Controller::class,"create_new_player_sql"]
+// );
+// // チーム名をSQL登録(これは選手をsql登録と一緒にやろう。つまり単独では必要ない。むしろ単独ではエラーになる)
+// Route::get('/nowteam/teamname/team_to_sql',[Nowlists23Controller::class,"teamname_to_sql"]
+// );
 
-// // 選手をシーズン途中でのアップロード
+// // 選手をシーズン途中でのアップロード(config/view_irregular)を先に行うこと
 Route::get('/update_player_list',[Nowlists23Controller::class,"update_player_sql"]);
 
-// // チーム名をSQL登録(これは選手をsql登録と一緒にやろう。つまり単独では必要ない。むしろ単独ではエラーになる)
-Route::get('/nowteam/teamname/team_to_sql',[Nowlists23Controller::class,"teamname_to_sql"]
-);
 
 // // 背番号が重なっていないか？
 Route::get("testpage",function(){
@@ -44,7 +46,7 @@ Route::get("testpage",function(){
 });
 
 // イレギュラーな名前がリストに登録されていないか？
-Route::get("config/view_irregular",[Nowlists23Controller::class,"irregular_name_check"])
+Route::get("config/view_irregular",[IrregularRegisterController::class,"irregular_name_check"])
 ->name("show_irregular_inTxt_route");
 
 // // 年度の変更(確認)
