@@ -22,6 +22,15 @@
         @case("player_update")
           {{"プレイヤー登録時のエラーです"}}    
         @break
+        @case("playerNameException")
+          {{"過去の選手例外取得時のエラーです"}}    
+        @break
+        @case("withKakkoException")
+          {{"（がついた選手の\n存在確認時のエラーです"}}    
+        @break
+        @case("noCommaException")
+          {{"カンマがない選手の\n存在確認時のエラーです"}}    
+        @break
         @default
         {{$ptn}}
            {{"不明"}} 
