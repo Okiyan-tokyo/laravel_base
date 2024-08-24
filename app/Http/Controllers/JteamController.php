@@ -20,9 +20,9 @@ class JteamController extends Controller
 
 
     public function index(){
-        $J1lists=Teamname::orderBy("id")->select("eng_name", "jpn_name", "cate")->where("cate","=","J1")->get(); 
-        $J2lists=Teamname::orderBy("id")->select("eng_name", "jpn_name", "cate")->where("cate","=","J2")->get(); 
-        $J3lists=Teamname::orderBy("id")->select("eng_name", "jpn_name", "cate")->where("cate","=","J3")->get(); 
+        $J1lists=Teamname::orderBy("id")->select("eng_name", "jpn_name", "cate")->where("cate","=","J1")->get();
+        $J2lists=Teamname::orderBy("id")->select("eng_name", "jpn_name", "cate")->where("cate","=","J2")->get();
+        $J3lists=Teamname::orderBy("id")->select("eng_name", "jpn_name", "cate")->where("cate","=","J3")->get();
         return view('index')->with([
             "J1lists"=>$J1lists,
             "J2lists"=>$J2lists,
@@ -102,7 +102,7 @@ class JteamController extends Controller
             return [$answer,$team,$lists];
         }
     }
-    
+
 
 
 
@@ -118,7 +118,7 @@ class JteamController extends Controller
         if(!$this->team_isok($team)){
             exit;
         }
-        
+
         // 渡って来た「part」の値でpartを再代入。それ以外は処理しないだけ。
         if(strpos($type,"part")>0){
             $type="part";
@@ -129,11 +129,11 @@ class JteamController extends Controller
         try{
             DB::transaction(
                 function()use(&$lists,&$type,&$team){
-    
+
                     foreach($lists as $list){
                         // 数字かどうか,インジェクション対策
                         if(is_numeric($list)){
-                            $where_array=["num" => intval($list), "team" => $team];                            
+                            $where_array=["num" => intval($list), "team" => $team];
                             $data=Nowlists23::where($where_array)->first();
                             switch($type){
                                    case "full":
@@ -151,7 +151,7 @@ class JteamController extends Controller
                       }
                     }
                 });
-        }catch(PDOException $e){
+        }catch(\PDOException $e){
             // エラー処理
             // 結果を記録登録だけなので無視する
         }
@@ -168,14 +168,14 @@ class JteamController extends Controller
                     $list->save();
                 }
             );
-        }catch(PDOException $e){
+        }catch(\PDOException $e){
             // エラー処理
             // 結果を記録登録だけなので無視する
             }
     }
-    
+
     public function answer_full(){
-        // 正解不正解,背番号セットのフラグ    
+        // 正解不正解,背番号セットのフラグ
         $isok="out";
         $numset=[];
         // 共通の変数の取得
@@ -213,7 +213,7 @@ class JteamController extends Controller
 
     public function answer_part(){
 
-        // 正解不正解,背番号セットのフラグ    
+        // 正解不正解,背番号セットのフラグ
         $isok="out";
         $numset=[];
         // 共通の変数の取得
@@ -235,7 +235,7 @@ class JteamController extends Controller
                     $numset[]=$list->num;
                     goto not_require_full;
                 }
-            } 
+            }
             // フルネームと合っているかを見ていく
                 if($lists[0]===trim($list->full)){
                     $isok="ok";
@@ -258,7 +258,7 @@ class JteamController extends Controller
         return response()->json(["isok"=>$isok,"numset"=>$numset]);
         exit;
     }
-    
+
     // 結果登録のみ/背番号セット
     public function answer_withnum(){
         // 共通の変数の取得
@@ -277,7 +277,7 @@ class JteamController extends Controller
 
     // 選手が答えられた回数の順位
     public function record($table="nowlists23s", $season="all"){
-        
+
         // フルネーム
         $lists_full=DB::table($table." as n")
         ->select("n.full as full","n.right_full as right_full", "t.jpn_name as team","t.red as r", "t.blue as b","t.green as g")
@@ -285,7 +285,7 @@ class JteamController extends Controller
         ->orderBy("right_full","desc")
         ->where("right_full",">",0);
         if($table!=="nowlists23s"){
-          $lists_full->where("season","=",$season);            
+          $lists_full->where("season","=",$season);
         }
         $lists_full=$lists_full->get();
 
@@ -296,7 +296,7 @@ class JteamController extends Controller
         ->orderBy("right_part","desc")
         ->where("right_part",">",0);
         if($table!=="nowlists23s"){
-            $lists_part->where("season","=",$season);            
+            $lists_part->where("season","=",$season);
         }
         $lists_part=$lists_part->get();
 
@@ -307,7 +307,7 @@ class JteamController extends Controller
         ->orderBy("right_withnum","desc")
         ->where("right_withnum",">",0);
         if($table!=="nowlists23s"){
-            $lists_withnum->where("season","=",$season);            
+            $lists_withnum->where("season","=",$season);
         }
         $lists_withnum=$lists_withnum->get();
 
@@ -325,10 +325,10 @@ class JteamController extends Controller
         // ビューの表示
         return view("records/choice")->with(["seasons"=>$seasons]);
     }
-    
+
     // 過去の成績表（実際に表示するページ）
     public function view_archive(ResultSelectChoice $request){
-        
+
         // 年度取得
         $choiced_season=$request->record_year_select;
 
@@ -353,7 +353,7 @@ class JteamController extends Controller
         ->orderBy($column,"desc")
         ->where($column,">",0);
         if($table!=="nowlists23s"){
-         $lists->where("season","=",$season);            
+         $lists->where("season","=",$season);
         }
         $lists=$lists->get();
 

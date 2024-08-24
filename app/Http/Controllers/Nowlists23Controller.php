@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\DB;
 
 class Nowlists23Controller extends Controller
 {
-    
+
     public function teamname_to_sql(){
         Teamname::truncate();
 
@@ -23,9 +23,9 @@ class Nowlists23Controller extends Controller
             try{
                 $lists=[
                 // J1
-                ["sapporo","札幌","J1", 215, 0,15],       
-                ["kashima","鹿島","J1",183 ,24,64],       
-                ["urawa","浦和","J1",231,0,43],      
+                ["sapporo","札幌","J1", 215, 0,15],
+                ["kashima","鹿島","J1",183 ,24,64],
+                ["urawa","浦和","J1",231,0,43],
                 ["kashiwa","柏","J1",255,241,0],
                 ["fc_tokyo","FC東京","J1",33,65,152],
                 ["tokyo_v","東京V","J1",3,118,75],
@@ -65,7 +65,7 @@ class Nowlists23Controller extends Controller
                 ["kumamoto","熊本","J2",186,26,20],
                 ["oita","大分","J2",20,11,140],
                 ["kagoshima","鹿児島","J2",22,51,95],
-                
+
                 // J3
                 ["hachinoe","八戸","J3",20,168,59],
                 ["iwate","岩手","J3",255,255,255],
@@ -87,7 +87,7 @@ class Nowlists23Controller extends Controller
                 ["kitakyushu","北九州","J3",255,241,0],
                 ["miyazaki","宮崎","J3",255,255,255],
                 ["ryukyu","琉球","J3",152,7,71],
-            ]; 
+            ];
             foreach($lists as $list){
                 $tnsets=new Teamname();
                 $tnsets->eng_name=$list[0];
@@ -115,8 +115,8 @@ class Nowlists23Controller extends Controller
     public function player_info_from_text(){
         // txtのファイルの取得(storage/app)
         // ディレクトリ内のファイル一覧を取得
-        $txtfiles = glob(storage_path('app/files/team_name').'/*.txt');        
-        
+        $txtfiles = glob(storage_path('app/files/team_name').'/*.txt');
+
         // 正規表現
         $ptn_num="/^([0-9])+/u";
         $ptn_name="/([ぁ-ん]|[ァ-ヴー]|[一-龠﨑々ヶ㟢（）]|　)+/u";
@@ -132,7 +132,7 @@ class Nowlists23Controller extends Controller
         $teamandtxt=mb_substr($txt,$slashpoint+10);
         $team=mb_substr($teamandtxt,0,mb_strlen($teamandtxt)-4);
 
-        $n=0;   
+        $n=0;
 
 
         foreach($lists as $list){
@@ -140,15 +140,15 @@ class Nowlists23Controller extends Controller
             $fullname="";
             $restname="";
             $partname=[];
-            
+
             // 選手データは３行に１つ
             if($n%3===0){
             // idはinsertされない
             $id_n++;
-     
+
             preg_match_all($ptn_num,$list,$numbase);
             preg_match_all($ptn_name,$list,$namebase);
-            
+
             // 背番号がない場合はここでひとまず1000を格納
             if(count($numbase[0])===0){
                 $numbase[0]=[1000];
@@ -174,7 +174,7 @@ class Nowlists23Controller extends Controller
                 // 複数挿入できるinsertメソッドを使う場合、idとcreated atは手動挿入が必要
                 "id"=>$id_n,
                 "created_at" => date("Y-m-d H:i:s", time()),
-                "updated_at" => date("Y-m-d H:i:s", time()), 
+                "updated_at" => date("Y-m-d H:i:s", time()),
                 "team"=>$team,
                 "num"=>$numbase[0][0],
                 "full"=>$fullname,
@@ -182,7 +182,7 @@ class Nowlists23Controller extends Controller
                 'right_full' => 0,
                 'right_part' => 0,
                 'right_withnum' => 0
-            ];    
+            ];
         }
             $n++;
         }
@@ -193,12 +193,12 @@ class Nowlists23Controller extends Controller
 
     // 新たに登録する時
     public function create_new_player_sql(){
-    
+
         // 全データ取得
         $playerlists=$this->player_info_from_text();
 
         // まずは全件削除
-        Nowlists23::truncate(); 
+        Nowlists23::truncate();
         // トランザクション成否
         $transactionMessage="";
         // 挿入
@@ -219,72 +219,70 @@ class Nowlists23Controller extends Controller
         }
     }
 
+
     // シーズン途中でのアップロード
     public function update_player_sql(){
 
-    // 例外表示と訂正
-    // まずは確認しよう！！（config/view_irregular）
+        // 例外表示と訂正
+        // まずは確認しよう！！（config/view_irregular）
 
-        // 全データ取得
-        $playerlists=$this->player_info_from_text();
+            // 全データ取得
+            $playerlists=$this->player_info_from_text();
 
-        $alldata=Nowlists23::all();
-        
-        $out_information=[];
-        $in_information=[];
-        
+            $alldata=Nowlists23::all();
 
-        // sqlリストにあり＝選手名鑑になし＝データ削除 
-        foreach($alldata as $data){
-          foreach($playerlists as $player){
-                // チームも登録名も背番号も同じ＝そのまま
-                // 全て同じ選手が移籍してきた時に未対応
-                if(
-                    $player["team"]===$data->team &&
-                    $player["full"]===$data->full &&
-                    $player["part"]===$data->part &&
-                    intval($player["num"])===$data->num
-                    ){
-                        // 同じペアがあればループを抜ける
-                        goto ok_1;
-                    }
-            }
-     
-            $out_information[]=$data;
-            $data->delete();    
-         ok_1:
-        }
+            $out_information=[];
+            $in_information=[];
 
-         // sqlリストになし＝選手名鑑にあり＝データ挿入
-        foreach($playerlists as $player){
+
+            // sqlリストにあり＝選手名鑑になし＝データ削除
             foreach($alldata as $data){
-                if(
-                    $player["team"]===$data->team &&
-                    $player["full"]===$data->full &&
-                    $player["part"]===$data->part &&
-                    intval($player["num"])===$data->num
-                    ){
-                        // 同じペアがあればループを抜ける
-                        goto ok_2;
-                    }                      
+                if(!$this->isTextFileDataExists_inSql($data,$playerlists)){
+                    $out_information[]=$data;
+                    $data->delete();
+                }
             }
-            
-            // 挿入
-            $in_information[]=$player;
-  
-            // １行ずつIDをつけて挿入する方法
-            // idが重なる対策に、10000人以上登録はいないと言う前提だが・・・
-            $player["id"]=$player["id"]+10000;
-            DB::table("nowlists23s")->insertGetId($player);
-            ok_2:
+
+
+            // sqlリストになし＝選手名鑑にあり＝データ挿入
+            foreach($playerlists as $player){
+                if(!$this->isSqlDataExists_inTextfile($player)){
+                    $in_information[]=$player;
+                    // １行ずつIDをつけて挿入する方法
+                    // idが重なる対策に、10000人以上登録はいないと言う前提だが・・・
+                    $player["id"]=$player["id"]+10000;
+                    DB::table("nowlists23s")->insert($player);
+               }
+           }
+
+            return view("now_team.update_playerlists")->with(["in_information"=>$in_information,"out_information"=>$out_information]);
+
         }
 
-        return view("now_team.update_playerlists")->with(["in_information"=>$in_information,"out_information"=>$out_information]);
-        
-    }
+        //sqlリストにあり＝選手名鑑になしの場合チェック(foreach内部の個々)
+        private function isTextFileDataExists_inSql($sql_data,$playerlists){
+            return collect($playerlists)->contains(function($player)use($sql_data){
+                return(
+                    $player["team"] === $sql_data->team &&
+                    $player["full"] === $sql_data->full &&
+                    $player["part"] === $sql_data->part &&
+                    intval($player["num"]) === $sql_data->num
+                 );
+                });
+        }
+        //選手名間あり＝sqlになしの場合チェック(foreach内部の個々)
+        private function isSqlDataExists_inTextfile($text_data){
+            return Nowlists23::where([
+                ["team","=",$text_data["team"]],
+                ["full","=",$text_data["full"]],
+                ["part","=",$text_data["part"]],
+                ["num","=",intval($text_data["num"])]
+                ])->exists();
+        }
+
 
     // 年度の変更
-    public function year_change(Request $request){ 
+    public function year_change(Request $request){
 
         // old_year_nameのバリデーションの年度取得
         $pastYear=date("Y",time())-1;
@@ -306,7 +304,7 @@ class Nowlists23Controller extends Controller
             "pass.required"=>"パスワードが入力されていません",
             "pass.regex"=>"パスワードの値が不正です",
         ]);
-        
+
         // どの年度のデータを保存するか？
         $old_year_name=$request->old_year_name;
 
@@ -326,12 +324,12 @@ class Nowlists23Controller extends Controller
                 // １度でも回答された選手のみ登録
                 if($yr->right_part>0 || $yr->right_full || $yr->right_withnum>0){
                     $archive=new Archive();
-                    
+
                     // 共通カラムをコピー(ダイレクトにコピーするとモデル自体がコピーされるので、１つずつ行う)
                     $commons=["num","team","full","part","right_part","right_full","right_withnum"];
                     foreach($commons as $c){
                         $archive->$c=$yr->$c;
-                    }                
+                    }
 
                     // どのシーズンかを登録
                     $archive["season"]=$old_year_name;
@@ -341,13 +339,13 @@ class Nowlists23Controller extends Controller
               }
             }catch(\Throwable $e){
               $messageFromTransaction=$e->getMessage();
-            }    
+            }
         });
 
         if(!empty($messageFromTransaction)){
             return $this->config_to_error($messageFromTransaction);
             exit;
-        }        
+        }
 
         // チームの名前とカテの更新
         // transactionがエラーで返ればエラー
@@ -379,5 +377,5 @@ class Nowlists23Controller extends Controller
             "ptn"=>$message
         ]);
     }
-    
+
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Nowlists23;
 
 class IrregularRegisterController extends Controller
 {
@@ -21,7 +22,7 @@ class IrregularRegisterController extends Controller
 
         // 「（」がついた選手の取得
         $with_kakko_players=$this->get_with_kakko_players($all_player_lists);
-        
+
         // カンマがない＝partがfullと同じ、選手たちのリスト
         $no_conma_players=$this->get_no_comma_players($all_player_lists);
 
@@ -72,7 +73,7 @@ class IrregularRegisterController extends Controller
                 ];
             }
         }
-        
+
         // 見つからなかった選手たちが返還
         return  $exception_players_in_txt;
     }
@@ -105,5 +106,26 @@ class IrregularRegisterController extends Controller
             }
         }
         return $no_conma_players;
+    }
+
+    // 背番号の重なりをチェック
+    public function duplicated_number_check(){
+
+
+        $alldata=Nowlists23::all();
+
+        // 背番号重複リストの格納
+        $duplicated_lists=
+        $alldata->groupBy(function($item){
+            return($item["team"]."_".$item["num"]);
+        })->filter(function($group){
+            return count($group)>1;
+        })->map(function($group){
+            return $group->first()["team"]."...".$group->first()["num"];
+        })->values()->toArray();
+
+        return view("config/duplicated_number_check",[
+            "lists"=>$duplicated_lists
+        ]);
     }
 }

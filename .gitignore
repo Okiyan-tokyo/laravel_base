@@ -18,8 +18,9 @@ yarn-error.log
 /.fleet
 /.idea
 /.vscode
-/resources/views/testpage.blade.php
+update_explain.txt
+
 # 以下はローカルでコピーした時のみ
-/resources/views/config
-/resources/views/now_team
-/storage/app/file/team_name
+# /resources/views/config
+# /resources/views/now_team
+# /storage/app/file/team_name

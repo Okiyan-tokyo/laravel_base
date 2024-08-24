@@ -2,7 +2,7 @@
 
 <x-slot name="title">{{$teamsets[0]->jpn_name}}</x-slot>
 
-<body 
+<body
 data-red="{{$teamsets[0]->red}}"
 data-green="{{$teamsets[0]->green}}"
 data-blue="{{$teamsets[0]->blue}}"
@@ -16,10 +16,10 @@ id="its_game">
 
 <h2 class="toph2"> {{$teamsets[0]->jpn_name}}：選手当てクイズ！</h2>
 
-<form action="{{route($formroute)}}" method="post" class="answerform" data-url="{{route($formroute)}}" data-team="{{$teamsets[0]->eng_name}}">   
-  
+<form action="{{route($formroute)}}" method="post" class="answerform" data-url="{{route($formroute)}}" data-team="{{$teamsets[0]->eng_name}}">
+
   @csrf
-  
+
   <div class="user_answer_set">
     <div class="inputsets">
       @if($formroute!=="withnumroute")
@@ -30,15 +30,15 @@ id="its_game">
       @endif
     </div>
 
-    <div class="correct_answers"> 
+    <div class="correct_answers">
      <p class="correct_count">
       <span class="countspan1">0</span>人正解</p>
       <p class="rest_count">
-      (あと<span class="countspan2">{{count($lists_without_1000)}}</span>人)</p>      
+      (あと<span class="countspan2">{{count($lists_without_1000)}}</span>人)</p>
     </div>
   </div>
 </form>
-  
+
   <p id="whenwrong" class="whenwrongbase">×</p>
   <div id="existname" class="existbase">
     <div class="existtext">回答済</div>
@@ -77,7 +77,7 @@ id="its_game">
    @if($list->num!==1000)
     {{$list->num}}
     @else
-    2種
+    ＊２種等
     @endif
   </td>
   @if($formroute==="withnumroute")
@@ -92,14 +92,14 @@ id="its_game">
   @else
     {{-- ２種の場合 --}}
     @if($list->num!==1000)
-    <td class="tdquestion" data-open="close" data-num="{{$list->num}}" data-name="{{$list->full}}">？？？</td>  
+    <td class="tdquestion" data-open="close" data-num="{{$list->num}}" data-name="{{$list->full}}">？？？</td>
     @else
-    <td class="tdquestion" data-open="open" data-num="{{$list->num}}" data-name="{{$list->full}}">{{$list->full}}</td>  
+    <td class="tdquestion" data-open="open" data-num="{{$list->num}}" data-name="{{$list->full}}">{{$list->full}}</td>
     @endif
   @endif
   </tr>
   @empty
-  {{"登録された選手はいません"}}      
+  {{"登録された選手はいません"}}
   @endforelse
 </tbody>
 
@@ -120,7 +120,7 @@ id="its_game">
 
 <div class="backtopdiv">
   <p class="backtopp"><a class="backtopa" href="{{route("indexroute")}}">戻る</a>
-  <span class="dataday">＊24年2月3日現在</span>
+  <span class="dataday">＊24年8月24日現在</span>
   </p>
 </div>
 
@@ -128,15 +128,15 @@ id="its_game">
 
 <script>
 
-  $(()=>{ 
-    
+  $(()=>{
+
     if($("#totalbtn").length){
        $("form").submit((e)=>{
          e.preventDefault();
          submit_answer1(e);
         })
       }
-      
+
     if($('#numsetbtn').length){
       $("#numsetbtn").on("click",submit_answer2)
     }
@@ -155,14 +155,14 @@ id="its_game">
           {
             method:"post",
             headers: {
-              'X-CSRF-TOKEN': '{{ csrf_token() }}' 
+              'X-CSRF-TOKEN': '{{ csrf_token() }}'
             },
             body:new URLSearchParams({
                 answer:$("#user_answer").val(),
                 team:$("form").data("team"),
             })
-          }    
-      )    
+          }
+      )
       .then((response)=>{
         return response.json();
       }).then((json)=>{
@@ -194,14 +194,14 @@ id="its_game">
               }
             })
           });
-                        
+
           if(elemsets.length>0){
             // 正解のカウントにプラスする
             fetch(
               $("#plus_route").data("url"),
               {
                 headers: {
-              'X-CSRF-TOKEN': '{{ csrf_token() }}' 
+              'X-CSRF-TOKEN': '{{ csrf_token() }}'
                 },
                 method:"post",
                 body:new URLSearchParams({
@@ -214,7 +214,7 @@ id="its_game">
             right_display(elemsets);
           }else{
             // 既に回答済みの時の処理
-            exist_display();    
+            exist_display();
             // 間違いの時の処理
           }
         }else{
@@ -227,7 +227,7 @@ id="its_game">
   function submit_answer2(e){
     e.preventDefault();
     let resultsets=[];
-    let elemsets=[];   
+    let elemsets=[];
     $(".input_with_num").each((i,elem)=>{
       // 正解のパターン＝フルネームに合う、もしくはパターンの合計に合う
       let array=["・"," ","　"];
@@ -250,8 +250,8 @@ id="its_game">
       });
 
       // 正解なら表示
-        if($(elem).val().trim()===$(elem).closest(".tdquestion").data("name").trim()){ 
-          if($(elem).closest(".tdquestion").data("open")==="close"){         
+        if($(elem).val().trim()===$(elem).closest(".tdquestion").data("name").trim()){
+          if($(elem).closest(".tdquestion").data("open")==="close"){
             $($(elem).closest($(".tdquestion"))).data("open", "open");
             elemsets.push($(elem));
             resultsets.push($($(elem).closest($(".tdquestion"))).data("num"));
@@ -267,7 +267,7 @@ id="its_game">
       {
         method:"post",
         headers: {
-              'X-CSRF-TOKEN': '{{ csrf_token() }}' 
+              'X-CSRF-TOKEN': '{{ csrf_token() }}'
             },
         body:new URLSearchParams({
           answer:resultsets.join(","),
@@ -280,7 +280,7 @@ id="its_game">
       if(elemsets.length>0){
         right_display2(elemsets);
       }else{
-        wrong_display();    
+        wrong_display();
       }
 
   }
@@ -288,8 +288,8 @@ id="its_game">
 
 
 
-  
-  
+
+
       // 正解(単独)
       function right_display(elemsets){
           // 正解の背番号の名前を開ける
@@ -326,7 +326,7 @@ id="its_game">
               submit_answer1(e);
             })
           },3000)
-  
+
           // 全問正解していたら、お祝いの表示
           if(Number($(".countspan2").text())===0){
             setTimeout(function(){
@@ -337,7 +337,7 @@ id="its_game">
             },3100)
            }
     }
-  
+
       // 正解(背番号とセット)
       function right_display2(elemsets){
           // 正解の背番号の名前を開ける
@@ -346,7 +346,7 @@ id="its_game">
             $(".tdquestion").each(function(i,elem){
                 $(elem).closest('tr').css("visibility","collapse");
             });
-              
+
             $(elemsets).each((eachi,eachinput)=>{
               const opentr=$(eachinput).closest("tr");
               const opentd=$(eachinput).closest("td");
@@ -357,7 +357,7 @@ id="its_game">
               $(".countspan1").text(Number($(".countspan1").text())+1);
               $(".countspan2").text(Number($(".countspan2").text())-1);
             });
-            
+
 
           // 正解マークの表示
           $(".answermark").text(elemsets.length+"人正解！");
@@ -377,7 +377,7 @@ id="its_game">
             $("button").css({pointerEvents:"auto",opacity:1});
             $(".not_fixed").css("transform","translateY(170px)");
           },3000)
-  
+
           // 全問正解していたら、お祝いの表示
           if(Number($(".countspan2").text())===0){
             setTimeout(function(){
