@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use App\Rules\ResultSelectRule;
 
-// 結果表示ページの年度選択のバリデーション
+// 結果表示ページの年度選択のバリデーション
 
 class ResultSelectChoice extends FormRequest
 {

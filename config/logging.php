@@ -61,6 +61,7 @@ return [
             'driver' => 'single',
             'path' => storage_path('logs/laravel.log'),
             'level' => env('LOG_LEVEL', 'debug'),
+            'date_format' => 'Y-m-d H:i:s',
         ],
 
         'daily' => [

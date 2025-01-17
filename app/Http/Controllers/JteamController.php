@@ -67,7 +67,7 @@ class JteamController extends Controller
         return view("game")->with(["teamsets"=>Teamname::where("eng_name","=",$team)->get(),
          "type"=>$type,
          "formroute"=>$formroute,
-         "lists"=>Nowlists23::where("team","=",$team)->get(),
+         "lists"=>Nowlists23::where("team","=",$team)->orderBy("num")->get(),
          "lists_without_1000"=>Nowlists23::where([
              ["team","=",$team],
              ["num","<>",1000],
@@ -277,11 +277,11 @@ class JteamController extends Controller
 
     // 選手が答えられた回数の順位
     public function record($table="nowlists23s", $season="all"){
-
+        $team_table=$table==="nowlists23s" ? "teamnames"  : "team_archives";
         // フルネーム
         $lists_full=DB::table($table." as n")
         ->select("n.full as full","n.right_full as right_full", "t.jpn_name as team","t.red as r", "t.blue as b","t.green as g")
-        ->join("teamnames as t","n.team","=","t.eng_name")
+        ->join($team_table. " as t","n.team","=","t.eng_name")
         ->orderBy("right_full","desc")
         ->where("right_full",">",0);
         if($table!=="nowlists23s"){
@@ -292,7 +292,7 @@ class JteamController extends Controller
         // 名前の一部
         $lists_part=DB::table($table." as n")
         ->select("n.full as full","n.right_part as right_part", "t.jpn_name as team","t.red as r", "t.blue as b","t.green as g")
-        ->join("teamnames as t","n.team","=","t.eng_name")
+        ->join($team_table. " as t","n.team","=","t.eng_name")
         ->orderBy("right_part","desc")
         ->where("right_part",">",0);
         if($table!=="nowlists23s"){
@@ -303,7 +303,7 @@ class JteamController extends Controller
         // 背番号とセット
         $lists_withnum=DB::table($table." as n")
         ->select("n.full as full", "t.jpn_name as team", "n.right_withnum as right_withnum","t.red as r", "t.blue as b","t.green as g")
-        ->join("teamnames as t","n.team","=","t.eng_name")
+        ->join($team_table. " as t","n.team","=","t.eng_name")
         ->orderBy("right_withnum","desc")
         ->where("right_withnum",">",0);
         if($table!=="nowlists23s"){
@@ -344,12 +344,12 @@ class JteamController extends Controller
         $season=$request->season;
         $rank_kind=$request->rank_kind;
         $column="right_".$rank_kind;
-        $table= $season==="all" ? "nowlists23s" : "archives";
+        [$table,$team_table]= $season==="all" ? ["nowlists23s","teamnames"] : ["archives","team_archives"];
 
         // 該当するsqlを表示
         $lists=DB::table($table." as n")
         ->select("n.full as full","n.".$column." as ".$column,"t.jpn_name as team","t.red as r", "t.blue as b","t.green as g")
-        ->join("teamnames as t","n.team","=","t.eng_name")
+        ->join($team_table. " as t","n.team","=","t.eng_name")
         ->orderBy($column,"desc")
         ->where($column,">",0);
         if($table!=="nowlists23s"){

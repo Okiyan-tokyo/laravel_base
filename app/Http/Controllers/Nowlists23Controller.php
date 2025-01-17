@@ -8,102 +8,67 @@ use Illuminate\Http\Request;
 use App\Models\Teamname;
 use App\Models\Nowlists23;
 use App\Models\Archive;
+use App\Models\Team_archive;
 use App\Enums\PublishStateType;
+use Exception;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class Nowlists23Controller extends Controller
 {
 
-    public function teamname_to_sql(){
+    // 新年度のチーム名をSQL追加
+    private function teamname_to_sql(){
+
+        // チームデータ格納庫からデータ取得
+        require_once(storage_path('app/files/all_teams_data.php'));
+
+
+        // アーカイブにセット
+        //「過去チーム」に存在しないチームを、アーカイブチームテーブルにセット(前年昇格チームなど)
+        if(!$this->store_team_archive()){
+            // エラーの場合
+            return "store_team_archive";
+        }
+
+
+        // アーカイブチームテーブルの名称変更(例：JFLから同地域のチームが参入時、もしくは色の変更)
+        if(!$this->archive_team_data_change(Archive_Change_Data)){
+            return "team_archive_data_change";
+        }
+
+
+        // 過去選手データのArchiveのチーム名の変更
+        if(!$this->archivePlayer_dataChange_relatedTeam(Archive_Change_Data)){
+            return "archivePlayer_relatedTeam_data_change";
+        }
+
+
+
+        //テーブルの削除
         Teamname::truncate();
 
         // トランザクションの成否
         $transactionMessage="";
         DB::transaction(function()use(&$transactionMessage){
             try{
-                $lists=[
-                // J1
-                ["sapporo","札幌","J1", 215, 0,15],
-                ["kashima","鹿島","J1",183 ,24,64],
-                ["urawa","浦和","J1",231,0,43],
-                ["kashiwa","柏","J1",255,241,0],
-                ["fc_tokyo","FC東京","J1",33,65,152],
-                ["tokyo_v","東京V","J1",3,118,75],
-                ["machida","町田","J1",0,35,106],
-                ["kawasaki","川崎","J1",53,160,217],
-                ["yokohama_fm","横浜FM","J1",0,57,137],
-                ["shonan","湘南","J1",103,180,100],
-                ["niigata","新潟","J1",255,102,0],
-                ["iwata","磐田","J1",110,157,211],
-                ["nagoya","名古屋","J1",218,54,27],
-                ["kyoto","京都","J1",116,0,107],
-                ["g_osaka","G大阪","J1",9,63,166],
-                ["c_osaka","C大阪","J1",212,0,105],
-                ["kobe","神戸","J1",143,10,31],
-                ["hiroshima","広島","J1",80,49,143],
-                ["fukuoka","福岡","J1",0,64,127],
-                ["tosu","鳥栖","J1",0,150,210],
-
-                // J2
-                ["sendai","仙台","J2",252,204,0],
-                ["akita","秋田","J2",0,91,171],
-                ["yamagata","山形","J2",15,34,139],
-                ["iwaki","いわき","J2",192,23,48],
-                ["mito","水戸","J2",29,31,144],
-                ["tochigi","栃木","J2",245,241,12],
-                ["gunma","群馬","J2",1,62,116],
-                ["yokohama_fc","横浜FC","J2",0,160,228],
-                ["chiba","千葉","J2",254,225,0],
-                ["kofu","甲府","J2",0,91,172],
-                ["shimizu","清水","J2",250,165,40],
-                ["fujieda","藤枝","J2",134,52,124],
-                ["okayama","岡山","J2",181,1,62],
-                ["yamaguchi","山口","J2",235,94,2],
-                ["ehime","愛媛","J2",255,102,0],
-                ["tokushima","徳島","J2",17,17,131],
-                ["nagasaki","長崎","J2",243,152,0],
-                ["kumamoto","熊本","J2",186,26,20],
-                ["oita","大分","J2",20,11,140],
-                ["kagoshima","鹿児島","J2",22,51,95],
-
-                // J3
-                ["hachinoe","八戸","J3",20,168,59],
-                ["iwate","岩手","J3",255,255,255],
-                ["fukushima","福島","J3",230,0,18],
-                ["omiya","大宮","J3",245,105,0],
-                ["ys_yokohama","YS横浜","J3",91,211,229],
-                ["sagamihara","相模原","J3",39,142,66],
-                ["matsumoto","松本","J3",2,61,29],
-                ["nagano","長野","J3",235,97,0],
-                ["toyama","富山","J3",17,25,135],
-                ["kanazawa","金沢","J3",229,0,9],
-                ["numazu","沼津","J3",0,30,179],
-                ["gifu","岐阜","J3",0,64,23],
-                ["fc_osaka","FC大阪","J3",126,201,240],
-                ["nara","奈良","J3",1,29,100],
-                ["tottori","鳥取","J3",144,238,144],
-                ["sanuki","讃岐","J3",101,170,221],
-                ["imabari","今治","J3",23,98,97],
-                ["kitakyushu","北九州","J3",255,241,0],
-                ["miyazaki","宮崎","J3",255,255,255],
-                ["ryukyu","琉球","J3",152,7,71],
-            ];
-            foreach($lists as $list){
-                $tnsets=new Teamname();
-                $tnsets->eng_name=$list[0];
-                $tnsets->jpn_name=$list[1];
-                $tnsets->cate=$list[2];
-                if(count($list)>3){
-                    $tnsets->red=$list[3];
-                    $tnsets->green=$list[4];
-                    $tnsets->blue=$list[5];
-                }else{
-                    $tnsets->red=250;
-                    $tnsets->green=250;
-                    $tnsets->blue=250;
+                // 定数は無名関数内部でも直接使用可能
+                foreach(Team_Data_Lists as $list){
+                    $tnsets=new Teamname();
+                    $tnsets->eng_name=$list[0];
+                    $tnsets->jpn_name=$list[1];
+                    $tnsets->cate=$list[2];
+                    if(count($list)>3){
+                        $tnsets->red=$list[3];
+                        $tnsets->green=$list[4];
+                        $tnsets->blue=$list[5];
+                    }else{
+                        $tnsets->red=250;
+                        $tnsets->green=250;
+                        $tnsets->blue=250;
+                    }
+                    $tnsets->save();
                 }
-                $tnsets->save();
-             }
             }catch(\Throwable $e){
                 $transactionMessage="teamdata_update";
             }
@@ -112,7 +77,7 @@ class Nowlists23Controller extends Controller
         return $transactionMessage;
     }
 
-    public function player_info_from_text(){
+    private function player_info_from_text(){
         // txtのファイルの取得(storage/app)
         // ディレクトリ内のファイル一覧を取得
         $txtfiles = glob(storage_path('app/files/team_name').'/*.txt');
@@ -192,7 +157,7 @@ class Nowlists23Controller extends Controller
     }
 
     // 新たに登録する時
-    public function create_new_player_sql(){
+    private function create_new_player_sql(){
 
         // 全データ取得
         $playerlists=$this->player_info_from_text();
@@ -217,6 +182,166 @@ class Nowlists23Controller extends Controller
         if(!empty($transactionMessage)){
            return $transactionMessage;
         }
+    }
+
+    // アーカイブにない場合、本年度のチーム情報をセット
+    private function store_team_archive(){
+        try{
+         DB::transaction(function(){
+            // 現在過去登録チームに入っているチーム名の取得
+            $team_archives=Team_archive::pluck("eng_name");
+
+            // 初回登録ではない時
+            if(!$team_archives->isEmpty()){
+
+                // 去年の登録チーム名が過去データに入っていないものを取得
+                $lastyearTeamNames_notInArchives=Teamname::whereNotIn("eng_name",$team_archives->toArray())->get();
+
+            // 初回登録の時
+            }else{
+                $lastyearTeamNames_notInArchives=Teamname::all();
+            }
+
+
+            // 過去データに入っていないチームを過去データに登録
+            foreach($lastyearTeamNames_notInArchives as $last_year_team){
+                $new_team_archive=new Team_archive();
+                $new_team_archive->jpn_name=$last_year_team->jpn_name;
+                $new_team_archive->eng_name=$last_year_team->eng_name;
+                $new_team_archive->red=$last_year_team->red;
+                $new_team_archive->green=$last_year_team->green;
+                $new_team_archive->blue=$last_year_team->blue;
+                $new_team_archive->save();
+             }
+           });
+          return true;
+        }catch(\Throwable $e){
+             // 失敗の場合
+             Log::info($e->getMessage());
+             return false;
+        }
+    }
+
+    // チームデータの変更
+    private function archive_team_data_change($change_data){
+        try{
+        DB::transaction(function()use(&$change_data){
+                // 引数でapp/storageに保存したチームデータが返ってくる
+                // keyByで並び替えたら、そのkeyを持つ最後のデータのみ取得されるので、存在する場合は必ず要素は1つになる
+
+                $stored_data_require_chenge=Team_Archive::whereIn("eng_name",array_keys($change_data))->get()->keyBy("eng_name");
+
+                foreach($change_data as $stored_eng_name=>$each_change_data_sets){
+
+                    // 過去チームデータがない時
+                    if(!isset($stored_data_require_chenge[$stored_eng_name])){
+                        throw new Exception($stored_eng_name."の数が異常です");
+                    }
+                    // keybyでチームごとに取り出したstoreされているコレクションに対し、モデルインスタンスを取り出す。
+                    $team=$stored_data_require_chenge[$stored_eng_name];
+                    foreach($each_change_data_sets as $key=>$value){
+                        if(!array_key_exists($key,$team->toArray())){
+                            throw new Exception("キーがありません");
+                        }
+                        $team->$key=$value;
+                    }
+                    // モデルの変更を保存
+                    $team->save();
+                }
+            });
+            return true;
+        }catch(\Throwable $e){
+            Log::info($e->getMessage());
+            return false;
+        }
+    }
+
+
+    // クイズデータのArchive登録
+    public function quiz_data_to_archive($old_year_name,$messageFromTransaction){
+        DB::transaction(function()use($old_year_name,&$messageFromTransaction){
+            try{
+            // 既に過去データが登録後ではないか？
+            if(count(Archive::where("season","=",$old_year_name)->get())>0){
+                throw new \PDOException("exist");
+            }
+            // 過去データの登録
+            $year_result=Nowlists23::all();
+            foreach($year_result as $yr){
+                // １度でも回答された選手のみ登録
+                if($yr->right_part>0 || $yr->right_full>0 || $yr->right_withnum>0){
+                    $archive=new Archive();
+
+                    // 共通カラムをコピー(ダイレクトにコピーするとモデル自体がコピーされるので、１つずつ行う)
+                    $commons=["num","team","full","part","right_part","right_full","right_withnum"];
+                    foreach($commons as $c){
+                        $archive->$c=$yr->$c;
+                    }
+
+                    // どのシーズンかを登録
+                    $archive["season"]=$old_year_name;
+                    $archive->save();
+
+                }
+              }
+            }catch(\Throwable $e){
+              Log::info($e->getMessage());
+              $messageFromTransaction="store_quiz_archive";
+            }
+        });
+
+        if(!empty($messageFromTransaction)){
+            return $this->config_to_error($messageFromTransaction);
+            exit;
+        }
+    }
+
+    // 過去クイズ履歴のチーム名変更に伴う処理
+    private function archivePlayer_dataChange_relatedTeam($change_data){
+        try{
+            // change_dataがチーム名
+            DB::transaction(function()use(&$change_data){
+                // 変更チームデータのそれぞれを抽出
+                foreach($change_data as $stored_eng_name=>$each_change_data_sets){
+                    // 変更データのeng_name
+                    if(array_key_exists("eng_name",$each_change_data_sets)){
+                        // 選手のArchiveからチーム名が変更チームのキーに含まれているものを抽出して変更
+                        $stored_data_require_chenge=Archive::where("team",$stored_eng_name)->get();
+                        foreach($stored_data_require_chenge as $each_stored_data){
+                            $each_stored_data->team=$each_change_data_sets["eng_name"];
+                            $each_stored_data->save();
+                        }
+                    }
+                }
+            });
+            return true;
+        }catch(\Throwable $e){
+            Log::info($e->getMessage());
+            return false;
+        }
+    }
+
+
+    //sqlリストにあり＝選手名鑑になしの場合チェック(foreach内部の個々)
+    private function isTextFileDataExists_inSql($sql_data,$playerlists){
+    return collect($playerlists)->contains(function($player)use($sql_data){
+        return(
+            $player["team"] === $sql_data->team &&
+            $player["full"] === $sql_data->full &&
+            $player["part"] === $sql_data->part &&
+            intval($player["num"]) === $sql_data->num
+            );
+        });
+  }
+
+    //選手名間あり＝sqlになしの場合チェック(foreach内部の個々)
+    private function isSqlDataExists_inTextfile($text_data){
+        return Nowlists23::where([
+            ["team","=",$text_data["team"]],
+            ["full","=",$text_data["full"]],
+            ["part","=",$text_data["part"]],
+            ["num","=",intval($text_data["num"])]
+            ])->exists();
     }
 
 
@@ -259,26 +384,7 @@ class Nowlists23Controller extends Controller
 
         }
 
-        //sqlリストにあり＝選手名鑑になしの場合チェック(foreach内部の個々)
-        private function isTextFileDataExists_inSql($sql_data,$playerlists){
-            return collect($playerlists)->contains(function($player)use($sql_data){
-                return(
-                    $player["team"] === $sql_data->team &&
-                    $player["full"] === $sql_data->full &&
-                    $player["part"] === $sql_data->part &&
-                    intval($player["num"]) === $sql_data->num
-                 );
-                });
-        }
-        //選手名間あり＝sqlになしの場合チェック(foreach内部の個々)
-        private function isSqlDataExists_inTextfile($text_data){
-            return Nowlists23::where([
-                ["team","=",$text_data["team"]],
-                ["full","=",$text_data["full"]],
-                ["part","=",$text_data["part"]],
-                ["num","=",intval($text_data["num"])]
-                ])->exists();
-        }
+
 
 
     // 年度の変更
@@ -312,40 +418,18 @@ class Nowlists23Controller extends Controller
         $messageFromTransaction="";
 
 
-        DB::transaction(function()use($old_year_name,&$messageFromTransaction){
-            try{
-            // 既に過去データが登録後ではないか？
-            if(count(Archive::where("season","=",$old_year_name)->get())>0){
-                throw new \PDOException("exist");
-            }
-            // 過去データの登録
-            $year_result=Nowlists23::all();
-            foreach($year_result as $yr){
-                // １度でも回答された選手のみ登録
-                if($yr->right_part>0 || $yr->right_full || $yr->right_withnum>0){
-                    $archive=new Archive();
 
-                    // 共通カラムをコピー(ダイレクトにコピーするとモデル自体がコピーされるので、１つずつ行う)
-                    $commons=["num","team","full","part","right_part","right_full","right_withnum"];
-                    foreach($commons as $c){
-                        $archive->$c=$yr->$c;
-                    }
+// 後で消す
+// goto A;
 
-                    // どのシーズンかを登録
-                    $archive["season"]=$old_year_name;
-                    $archive->save();
+        // クイズデータのArchive登録
+        // エラーなら内部でエラーページが返ってexitする
+        // 未確認なので実験必要！！！！！！！！
+        $this->quiz_data_to_archive($old_year_name,$messageFromTransaction);
 
-                }
-              }
-            }catch(\Throwable $e){
-              $messageFromTransaction=$e->getMessage();
-            }
-        });
 
-        if(!empty($messageFromTransaction)){
-            return $this->config_to_error($messageFromTransaction);
-            exit;
-        }
+// 後で消す
+// A:
 
         // チームの名前とカテの更新
         // transactionがエラーで返ればエラー
@@ -360,9 +444,6 @@ class Nowlists23Controller extends Controller
                exit;
             }
         }
-
-
-        $message="旧年をアーカイブ登録し\n新年度を登録しました！";
 
         return view("config/sign")->with([
             "message"=>"旧年をアーカイブ登録し\n新年度を登録しました！"
