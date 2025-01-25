@@ -77,7 +77,7 @@ class Nowlists23Controller extends Controller
         return $transactionMessage;
     }
 
-    private function player_info_from_text(){
+    public function player_info_from_text(){
         // txtのファイルの取得(storage/app)
         // ディレクトリ内のファイル一覧を取得
         $txtfiles = glob(storage_path('app/files/team_name').'/*.txt');
@@ -101,6 +101,7 @@ class Nowlists23Controller extends Controller
 
 
         foreach($lists as $list){
+
             // 初期化
             $fullname="";
             $restname="";
