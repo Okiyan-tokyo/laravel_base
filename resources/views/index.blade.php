@@ -10,15 +10,15 @@
 <x-slot name="title">Jリーグ選手名クイズ！</x-slot>
 
 <body class="topbody" style="background: url({{url("img/img3.jpg")}}); background-size:300px 300px; background-repeat:repeat;">
-<h1 class="toph1">24年Jリーグ：選手名クイズ！</h1>
+<h1 class="toph1">25年Jリーグ：選手名クイズ！</h1>
 
 <h3 class="toph3">チームとタイプを選択してください！</h3>
 
 
 <form action="{{ route("selectteamroute");}}" method="post" class="firstselectform">
-  
+
   @csrf
-  
+
 @if(count($errors)===1)
  <div class="selectsets select_when_error">
 @elseif(count($errors)===2)
@@ -52,7 +52,7 @@
         <option name="teamselect" value={{$J3list->eng_name}}
           @if(old("teamselect")===$J3list->eng_name)
           selected
-          @endif  
+          @endif
           >{{$J3list->jpn_name}}</option>
       @endforeach
 <select>
@@ -60,7 +60,7 @@
     @error('teamselect')
     <p class="errormessage">{{"選択してください"}}</p>
     @enderror
-    
+
 <div class="typeselectdiv">
   <p class="typelabel">タイプ</p>
   <select id="type" name="typeselect" class="typeselect">

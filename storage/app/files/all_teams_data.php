@@ -7,8 +7,8 @@
 const Archive_Change_Data=[
 
       "tochigi"=>[
-          "jpn_name"=>"栃木S",
-          "eng_name"=>"tochigi_s",
+          "jpn_name"=>"栃木SC",
+          "eng_name"=>"tochigi_sc",
       ],
 
     ];

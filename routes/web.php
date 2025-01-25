@@ -38,30 +38,30 @@ Route::post('/select.team',[JteamController::class,"select_team"])->name("select
 
 // // 選手をシーズン途中でのアップロード// (config/view_irregular)を先に行うこと
 // (/config/duplicated_number_check)を終了後に行うこと
-// Route::get('/update_player_list',[Nowlists23Controller::class,"update_player_sql"]);
+Route::get('/update_player_list',[Nowlists23Controller::class,"update_player_sql"]);
 
 // // 背番号が重なっていないか？
-// Route::get("/config/duplicated_number_check",[IrregularRegisterController::class,"duplicated_number_check"]);
+Route::get("/config/duplicated_number_check",[IrregularRegisterController::class,"duplicated_number_check"]);
 
 // イレギュラーな名前がリストに登録されていないか？
-// Route::get("config/view_irregular",[IrregularRegisterController::class,"irregular_name_check"])
-// ->name("show_irregular_inTxt_route");
+Route::get("config/view_irregular",[IrregularRegisterController::class,"irregular_name_check"])
+->name("show_irregular_inTxt_route");
 
 // // 年度の変更(確認)
 // (config/view_irregular)を先に行うこと
 // 全て登録を終えたら(/config/duplicated_number_check)を行うこと
-// Route::get("year_change_confirm",
-//   function(){
-//     return view("config/year_change_confirm")->with([
-//       "pastYear"=>date("Y",time())-1,
-//       "thisYear"=>date("Y",time())
-//     ]);
-//   }
-// );
+Route::get("year_change_confirm",
+  function(){
+    return view("config/year_change_confirm")->with([
+      "pastYear"=>date("Y",time())-1,
+      "thisYear"=>date("Y",time())
+    ]);
+  }
+);
 
 // // 年度の変更(本番)
-// Route::patch("year_change",[Nowlists23Controller::class,"year_change"])
-// ->name("year_change_route");
+Route::patch("year_change",[Nowlists23Controller::class,"year_change"])
+->name("year_change_route");
 
 
 // フルネームが正しいか
