@@ -62,7 +62,7 @@ const Team_Data_Lists=[
                 // J3
                 ["hachinoe","八戸","J3",20,168,59],
                 ["fukushima","福島","J3",230,0,18],
-                ["tochigi_s","栃木S","J3",245,241,12],
+                ["tochigi_sc","栃木SC","J3",245,241,12],
                 ["tochigi_c","栃木C","J3",0,41,85],
                 ["gunma","群馬","J3",1,62,116],
                 ["sagamihara","相模原","J3",39,142,66],
